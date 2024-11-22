@@ -75,7 +75,7 @@ input:checked + .slider:before {
                 <input type="text" id="veadotube-window-title">
                 <div>
                         <p>Status: <span id="veadotube-connection-status">Disconnected</span>
-                        <button class="btn btn-primary btn-sm" onclick="updateHTMLStatus();">Force Refresh WebSocket Status</button></p>
+                        <button class="btn btn-primary btn-sm" onclick="getWebSocketStatus();">Force Refresh WebSocket Status</button></p>
                 </div>
                 <div class="switch-container">
                         <label class="switch">
@@ -84,7 +84,7 @@ input:checked + .slider:before {
                         </label>
                         <span>Auto-reconnect if connection is lost?</span>
                 </div>
-                <button class="btn btn-primary btn-sm" onclick="connectWebsocket();">Connect WebSocket</button>
+                <button class="btn btn-primary btn-sm" onclick="connectWebSocket();">Connect WebSocket</button>
                 <button class="btn btn-primary btn-sm" onclick="requestStatesRefresh();">Refresh Avatar States</button>
         </div>
 </div>
@@ -143,32 +143,58 @@ function SAMMIVM_InsertBaseCommands() {
         });
 
         SAMMI.extCommand('Veadotube mini - Set Avatar State', 3355443, 52, {
-                state: ['State to set', 20, '', null, ['No States detected! Is the WebSocket connected?']],
+                state: ['State to set', 20, 'No States detected! Is the WebSocket connected?', null, ['No States detected! Is the WebSocket connected?']],
                 oldState: saveOldStateAsVariableBox
         });
 
         SAMMI.extCommand('Veadotube mini - Push Avatar State', 3355443, 52, {
-                state: ['State to push', 20, '', null, ['No States detected! Is the WebSocket connected?']],
+                state: ['State to push', 20, 'No States detected! Is the WebSocket connected?', null, ['No States detected! Is the WebSocket connected?']],
                 oldState: saveOldStateAsVariableBox
         });
 
         SAMMI.extCommand('Veadotube mini - Pop Avatar State', 3355443, 52, {
-                state: ['State to pop', 20, '', null, ['No States detected! Is the WebSocket connected?']],
+                state: ['State to pop', 20, 'No States detected! Is the WebSocket connected?', null, ['No States detected! Is the WebSocket connected?']],
                 oldState: saveOldStateAsVariableBox
         });
 
         SAMMI.extCommand('Veadotube mini - Thumb Avatar State', 3355443, 52, {
-                state: ['State to thumb', 20, '', null, ['No States detected! Is the WebSocket connected?']],
+                state: ['State to thumb', 20, 'No States detected! Is the WebSocket connected?', null, ['No States detected! Is the WebSocket connected?']],
                 variable: saveAsVariableBox
+        });
+
+        // ID Commands
+        SAMMI.extCommand('Veadotube mini - Set Avatar State (by ID)', 3355443, 52, {
+                state: ['State to set', 14, ''],
+                oldState: saveOldStateAsVariableBox
+        });
+
+        SAMMI.extCommand('Veadotube mini - Push Avatar State (by ID)', 3355443, 52, {
+                state: ['State to push', 14, ''],
+                oldState: saveOldStateAsVariableBox
+        });
+
+        SAMMI.extCommand('Veadotube mini - Pop Avatar State (by ID)', 3355443, 52, {
+                state: ['State to pop', 14, ''],
+                oldState: saveOldStateAsVariableBox
+        });
+
+        SAMMI.extCommand('Veadotube mini - Thumb Avatar State (by ID)', 3355443, 52, {
+                state: ['State to thumb', 14, ''],
+                variable: saveAsVariableBox
+        });
+
+        // Misc
+        SAMMI.extCommand('Veadotube mini - Set Random Avatar State', 3355443, 52, {
+                oldState: saveOldStateAsVariableBox
         });
 }
 
 function SAMMIVM_InsertCommandHooks() {
         sammiclient.on('Veadotube mini - Peek Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
-                window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].peek.push((websocketResponse) => {
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.push((websocketResponse) => {
                         if (!!SAMMI_JSON.variable) SAMMI.setVariable(SAMMI_JSON.variable, websocketResponse, SAMMI_JSON.FromButton);
-                })
+                });
 
                 requestPeekState();
         });
@@ -176,41 +202,89 @@ function SAMMIVM_InsertCommandHooks() {
         sammiclient.on('Veadotube mini - Set Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
                 // HACK: Used peek queue because websocket response always contains peek instead of set
-                window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].peek.push((websocketResponse) => {
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.push((websocketResponse) => {
                         if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
-                })
+                });
 
-                requestSetState(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`][SAMMI_JSON.state]);
+                requestSetState(window.VEADOTUBE_MINI_PLUGIN_NAME.states[SAMMI_JSON.state]);
         });
 
         sammiclient.on('Veadotube mini - Push Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
                 // HACK: Used peek queue because websocket response always contains peek instead of push
-                window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].peek.push((websocketResponse) => {
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.push((websocketResponse) => {
                         if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
-                })
+                });
 
-                requestPushState(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`][SAMMI_JSON.state]);
+                requestPushState(window.VEADOTUBE_MINI_PLUGIN_NAME.states[SAMMI_JSON.state]);
         });
 
         sammiclient.on('Veadotube mini - Pop Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
                 // HACK: Used peek queue because websocket response always contains peek instead of pop
-                window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].peek.push((websocketResponse) => {
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.push((websocketResponse) => {
                         if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
-                })
+                });
 
-                requestPopState(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`][SAMMI_JSON.state]);
+                requestPopState(window.VEADOTUBE_MINI_PLUGIN_NAME.states[SAMMI_JSON.state]);
         });
 
         sammiclient.on('Veadotube mini - Thumb Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
-                // NOTE: The only one that websocket actually returns thumb
-                window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].thumb.push((websocketResponse) => {
+                // NOTE: The only case where websocket response actually corresponds to the payload event (thumb)
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.thumb.push((websocketResponse) => {
                         if (!!SAMMI_JSON.variable) SAMMI.setVariable(SAMMI_JSON.variable, websocketResponse, SAMMI_JSON.FromButton);
-                })
+                });
 
-                requestThumbState(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`][SAMMI_JSON.state]);
+                requestThumbState(window.VEADOTUBE_MINI_PLUGIN_NAME.states[SAMMI_JSON.state]);
+        });
+
+        // ID commands
+        sammiclient.on('Veadotube mini - Set Avatar State (by ID)', async (json) => {
+                const SAMMI_JSON = json.Data;
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.push((websocketResponse) => {
+                        if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
+                });
+
+                requestSetState(SAMMI_JSON.state);
+        });
+
+        sammiclient.on('Veadotube mini - Push Avatar State (by ID)', async (json) => {
+                const SAMMI_JSON = json.Data;
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.push((websocketResponse) => {
+                        if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
+                });
+
+                requestPushState(SAMMI_JSON.state);
+        });
+
+        sammiclient.on('Veadotube mini - Pop Avatar State (by ID)', async (json) => {
+                const SAMMI_JSON = json.Data;
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.push((websocketResponse) => {
+                        if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
+                });
+
+                requestPopState(SAMMI_JSON.state);
+        });
+
+        sammiclient.on('Veadotube mini - Thumb Avatar State (by ID)', async (json) => {
+                const SAMMI_JSON = json.Data;
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.thumb.push((websocketResponse) => {
+                        if (!!SAMMI_JSON.variable) SAMMI.setVariable(SAMMI_JSON.variable, websocketResponse, SAMMI_JSON.FromButton);
+                });
+
+                requestThumbState(SAMMI_JSON.state);
+        });
+
+        // Misc
+        sammiclient.on('Veadotube mini - Set Random Avatar State', async (json) => {
+                const SAMMI_JSON = json.Data;
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.push((websocketResponse) => {
+                        if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
+                });
+
+                let states = Object.entries(window.VEADOTUBE_MINI_PLUGIN_NAME.states);
+                requestSetState(states[Math.floor(Math.random() * states.length)][1]);
         });
 }
 
@@ -228,12 +302,12 @@ function interpretResponse(responseData) {
         switch (payload.event) {
                 case "list":
                         VEADOTUBE_MINI_LOGGER.info(`Found ${payload.states.length} Avatar States.`);
-                        window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`] = {};
+                        window.VEADOTUBE_MINI_PLUGIN_NAME.states = {};
                         payload.states.forEach(element => {
-                                window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`][element.name] = element.id;
+                                window.VEADOTUBE_MINI_PLUGIN_NAME.states[element.name] = element.id;
                         });
 
-                        let state_names = Object.keys(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`]);
+                        let state_names = Object.keys(window.VEADOTUBE_MINI_PLUGIN_NAME.states);
 
                         SAMMI.extCommand('Veadotube mini - Set Avatar State', 3355443, 52, {
                                 state: ['State to set', 20, '', null, state_names],
@@ -266,10 +340,10 @@ function interpretResponse(responseData) {
                 case "set":
                 case "push":
                 case "pop":
-                        let func = window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`][payload.event].shift();
+                        let func = window.VEADOTUBE_MINI_PLUGIN_NAME.queues[payload.event].shift();
                         if (!func) break;
                         arg = {
-                                name: Object.keys(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`]).filter(key => window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`][key] === payload.state)[0],
+                                name: Object.keys(window.VEADOTUBE_MINI_PLUGIN_NAME.states).filter(key => window.VEADOTUBE_MINI_PLUGIN_NAME.states[key] === payload.state)[0],
                                 id: payload.state,
                                 ...arg,
                         };
@@ -298,7 +372,7 @@ function createVMWebSocket(callback = null) {
         window.VEADOTUBE_MINI_WebSocket = new WebSocket(veadotube_mini_server());
 
         window.VEADOTUBE_MINI_WebSocket.onmessage = (event) => {
-                updateHTMLStatus();
+                getWebSocketStatus();
                 if (!event.data) {
                         VEADOTUBE_MINI_LOGGER.warn("Response data was empty");
                         return;
@@ -313,7 +387,7 @@ function createVMWebSocket(callback = null) {
         }
 
         window.VEADOTUBE_MINI_WebSocket.onclose = (event) => {
-                updateHTMLStatus();
+                getWebSocketStatus();
                 VEADOTUBE_MINI_LOGGER.debug(`Disconnected(${event.code || "No code provided"}, ${event.reason || "No reason provided"})`);
                 VEADOTUBE_MINI_LOGGER.warn('Socket disconnected.');
                 if (veadotube_mini_auto_reconnect) {
@@ -324,12 +398,12 @@ function createVMWebSocket(callback = null) {
 
         window.VEADOTUBE_MINI_WebSocket.onopen = (event) => {
                 VEADOTUBE_MINI_LOGGER.info("WebSocket successfully connected!");
-                updateHTMLStatus();
+                getWebSocketStatus();
                 if (callback) callback();
         }
 
         window.VEADOTUBE_MINI_WebSocket.onerror = (error) => {
-                updateHTMLStatus("An error has occurred.");
+                getWebSocketStatus("An error has occurred.");
                 VEADOTUBE_MINI_LOGGER.error(`Socket error: ${error || "No error provided"}`);
         }
 }
@@ -413,19 +487,17 @@ function requestStatesRefresh() {
         requestListState();
 }
 
-function connectWebsocket() {
+function connectWebSocket() {
         // VEADOTUBE_MINI_LOGGER.info("Connecting WebSocket...");
         createVMWebSocket(requestStatesRefresh);
 }
 
-function updateHTMLStatus(customStatus = "") {
-        const statusElement = document.getElementById("veadotube-connection-status");
-        statusElement.innerText = customStatus.length ? customStatus : !!window.VEADOTUBE_MINI_WebSocket ? VEADOTUBE_MINI_WebSocket_StringStates[window.VEADOTUBE_MINI_WebSocket.readyState] : VEADOTUBE_MINI_WebSocket_StringStates[3];
-}
 
-function getWebSocketStatus() {
-        updateHTMLStatus();
-        return window.VEADOTUBE_MINI_WebSocket.readyState;
+function getWebSocketStatus(customLogMessageStatus = "") {
+        let status = !!window.VEADOTUBE_MINI_WebSocket ? window.VEADOTUBE_MINI_WebSocket.readyState : 3;
+        const statusElement = document.getElementById("veadotube-connection-status");
+        statusElement.innerText = customLogMessageStatus || VEADOTUBE_MINI_WebSocket_StringStates[status];
+        return status;
 }
 
 // COMMENT: Not necessary at the moment
@@ -444,9 +516,10 @@ function SAMMIVM_initialize() {
 
         VEADOTUBE_MINI_LOGGER.info("Started $!VERSIONNUMBER!$");
         
-        if (!window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`]) window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`] = {};
-        if (!window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`]) {
-                window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`] = {
+        window.VEADOTUBE_MINI_PLUGIN_NAME = {};
+        if (!window.VEADOTUBE_MINI_PLUGIN_NAME.states) window.VEADOTUBE_MINI_PLUGIN_NAME.states = {};
+        if (!window.VEADOTUBE_MINI_PLUGIN_NAME.queues) {
+                window.VEADOTUBE_MINI_PLUGIN_NAME.queues = {
                         peek: [],
                         set: [],
                         push: [],
