@@ -60,7 +60,7 @@ input:checked + .slider:before {
 </style>
 <div class="row">
         <h1>Veadotube Mini Extension</h1>
-        <p>Interact and manipulates Veadotube Mini through the Veadotube Mini's websocket.</p>
+        <p>Interact and manipulates Veadotube Mini through the Veadotube Mini's WebSocket.</p>
 </div>
 <div class="row">
         <div class="column">
@@ -84,7 +84,7 @@ input:checked + .slider:before {
                         </label>
                         <span>Auto-reconnect if connection is lost?</span>
                 </div>
-                <button class="btn btn-primary btn-sm" onclick="connectWebsocket();">Connect websocket</button>
+                <button class="btn btn-primary btn-sm" onclick="connectWebsocket();">Connect WebSocket</button>
                 <button class="btn btn-primary btn-sm" onclick="requestStatesRefresh();">Refresh Avatar States</button>
         </div>
 </div>
@@ -138,33 +138,33 @@ const saveAsVariableBox = ["Save Variable As", 14, ""];
 const saveOldStateAsVariableBox = ["Save Previous State As", 14, ""];
 
 function SAMMIVM_InsertBaseCommands() {
-        SAMMI.extCommand('Veadotube mini - Peek State', 3355443, 52, {
+        SAMMI.extCommand('Veadotube mini - Peek Avatar State', 3355443, 52, {
                 variable: saveAsVariableBox
         });
 
-        SAMMI.extCommand('Veadotube mini - Set State', 3355443, 52, {
+        SAMMI.extCommand('Veadotube mini - Set Avatar State', 3355443, 52, {
                 state: ['State to set', 20, '', null, ['No States detected! Is the WebSocket connected?']],
                 oldState: saveOldStateAsVariableBox
         });
 
-        SAMMI.extCommand('Veadotube mini - Push State', 3355443, 52, {
+        SAMMI.extCommand('Veadotube mini - Push Avatar State', 3355443, 52, {
                 state: ['State to push', 20, '', null, ['No States detected! Is the WebSocket connected?']],
                 oldState: saveOldStateAsVariableBox
         });
 
-        SAMMI.extCommand('Veadotube mini - Pop State', 3355443, 52, {
+        SAMMI.extCommand('Veadotube mini - Pop Avatar State', 3355443, 52, {
                 state: ['State to pop', 20, '', null, ['No States detected! Is the WebSocket connected?']],
                 oldState: saveOldStateAsVariableBox
         });
 
-        SAMMI.extCommand('Veadotube mini - Thumb State', 3355443, 52, {
+        SAMMI.extCommand('Veadotube mini - Thumb Avatar State', 3355443, 52, {
                 state: ['State to thumb', 20, '', null, ['No States detected! Is the WebSocket connected?']],
                 variable: saveAsVariableBox
         });
 }
 
 function SAMMIVM_InsertCommandHooks() {
-        sammiclient.on('Veadotube mini - Peek State', async (json) => {
+        sammiclient.on('Veadotube mini - Peek Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
                 window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].peek.push((websocketResponse) => {
                         if (!!SAMMI_JSON.variable) SAMMI.setVariable(SAMMI_JSON.variable, websocketResponse, SAMMI_JSON.FromButton);
@@ -173,7 +173,7 @@ function SAMMIVM_InsertCommandHooks() {
                 requestPeekState();
         });
 
-        sammiclient.on('Veadotube mini - Set State', async (json) => {
+        sammiclient.on('Veadotube mini - Set Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
                 // HACK: Used peek queue because websocket response always contains peek instead of set
                 window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].peek.push((websocketResponse) => {
@@ -183,7 +183,7 @@ function SAMMIVM_InsertCommandHooks() {
                 requestSetState(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`][SAMMI_JSON.state]);
         });
 
-        sammiclient.on('Veadotube mini - Push State', async (json) => {
+        sammiclient.on('Veadotube mini - Push Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
                 // HACK: Used peek queue because websocket response always contains peek instead of push
                 window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].peek.push((websocketResponse) => {
@@ -193,7 +193,7 @@ function SAMMIVM_InsertCommandHooks() {
                 requestPushState(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`][SAMMI_JSON.state]);
         });
 
-        sammiclient.on('Veadotube mini - Pop State', async (json) => {
+        sammiclient.on('Veadotube mini - Pop Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
                 // HACK: Used peek queue because websocket response always contains peek instead of pop
                 window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].peek.push((websocketResponse) => {
@@ -203,7 +203,7 @@ function SAMMIVM_InsertCommandHooks() {
                 requestPopState(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`][SAMMI_JSON.state]);
         });
 
-        sammiclient.on('Veadotube mini - Thumb State', async (json) => {
+        sammiclient.on('Veadotube mini - Thumb Avatar State', async (json) => {
                 const SAMMI_JSON = json.Data;
                 // NOTE: The only one that websocket actually returns thumb
                 window[`${VEADOTUBE_MINI_PLUGIN_NAME}_Queues`].thumb.push((websocketResponse) => {
@@ -235,22 +235,22 @@ function interpretResponse(responseData) {
 
                         let state_names = Object.keys(window[`${VEADOTUBE_MINI_PLUGIN_NAME}_States`]);
 
-                        SAMMI.extCommand('Veadotube mini - Set State', 3355443, 52, {
+                        SAMMI.extCommand('Veadotube mini - Set Avatar State', 3355443, 52, {
                                 state: ['State to set', 20, '', null, state_names],
                                 oldState: saveOldStateAsVariableBox
                         });
 
-                        SAMMI.extCommand('Veadotube mini - Push State', 3355443, 52, {
+                        SAMMI.extCommand('Veadotube mini - Push Avatar State', 3355443, 52, {
                                 state: ['State to push', 20, '', null, state_names],
                                 oldState: saveOldStateAsVariableBox
                         });
 
-                        SAMMI.extCommand('Veadotube mini - Pop State', 3355443, 52, {
+                        SAMMI.extCommand('Veadotube mini - Pop Avatar State', 3355443, 52, {
                                 state: ['State to pop', 20, '', null, state_names],
                                 oldState: saveOldStateAsVariableBox
                         });
 
-                        SAMMI.extCommand('Veadotube mini - Thumb State', 3355443, 52, {
+                        SAMMI.extCommand('Veadotube mini - Thumb Avatar State', 3355443, 52, {
                                 state: ['State to thumb', 20, '', null, state_names],
                                 variable: saveAsVariableBox
                         });
