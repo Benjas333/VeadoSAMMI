@@ -55,7 +55,7 @@ Set the actual avatar state to another one.
 
 Param | Description
 ------------- | -------------
-State to set | Specify the new avatar state.
+State to set | Specify the new avatar state by avatar state name.
 Save Previous State As | Specify the variable name that you want the response to be saved into.
 Delay (ms) | Native to SAMMI.
 
@@ -69,7 +69,7 @@ Push an avatar state over the actual avatar state.
 
 Param | Description
 ------------- | -------------
-State to push | Specify the new overlapped avatar state.
+State to push | Specify the new overlapped avatar state name.
 Save Previous State As | Specify the variable name that you want the response to be saved into.
 Delay (ms) | Native to SAMMI.
 
@@ -83,7 +83,7 @@ Pop an avatar state from the actual avatar state (if there's any).
 
 Param | Description
 ------------- | -------------
-State to pop | Specify the overlapped avatar state to remove.
+State to pop | Specify the overlapped avatar state name to remove.
 Save Previous State As | Specify the variable name that you want the response to be saved into.
 Delay (ms) | Native to SAMMI.
 
@@ -97,7 +97,7 @@ Get more detailed information about an avatar state.
 
 Param | Description
 ------------- | -------------
-State to thumb | Specify the avatar state to obtain info from.
+State to thumb | Specify the avatar state name to obtain info from.
 Save Variable As | Specify the variable name that you want the response to be saved into.
 Delay (ms) | Native to SAMMI.
 
@@ -110,9 +110,9 @@ Response format: {
 }
 
 ## TO DO
-- [ ] Add commands that use state ID instead of state name.
-- [ ] Change commands that use state name to display format: `name:id`.
-- [ ] Add random avatar state command.
+- [x] Add commands that use state ID besides of the state name commands.
+- [/] Change commands that use state name to display format: `name:id`. **Discarded.**
+- [x] Add random avatar state command.
 - [ ] Find an implement utility for listen and unlisten endpoints.
 
 ## Contributing
