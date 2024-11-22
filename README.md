@@ -37,7 +37,7 @@ I made this in like two days because it was no extension already for Veadotube m
 - From here, you should see in the SAMMI alerts area that the extension successfully connected to veadotube mini.
 
 ## Commands
-### Veadotube mini - Peek Avatar State
+- ### Veadotube mini - Peek Avatar State
 Peek the actual avatar state.
 
 Param | Description
@@ -50,7 +50,7 @@ Response format: {
         id: string
 }
 
-### Veadotube mini - Set Avatar State
+- ### Veadotube mini - Set Avatar State
 Set the actual avatar state to another one.
 
 Param | Description
@@ -64,7 +64,7 @@ Response format: {
         id: string
 }
 
-### Veadotube mini - Push Avatar State
+- ### Veadotube mini - Push Avatar State
 Push an avatar state over the actual avatar state.
 
 Param | Description
@@ -78,7 +78,7 @@ Response format: {
         id: string
 }
 
-### Veadotube mini - Pop Avatar State
+- ### Veadotube mini - Pop Avatar State
 Pop an avatar state from the actual avatar state (if there's any).
 
 Param | Description
@@ -92,7 +92,7 @@ Response format: {
         id: string
 }
 
-### Veadotube mini - Thumb Avatar State
+- ### Veadotube mini - Thumb Avatar State
 Get more detailed information about an avatar state.
 
 Param | Description
