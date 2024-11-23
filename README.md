@@ -1,5 +1,6 @@
 # SAMMIVeadotubeMiniExtension
 This is an extension for [SAMMI](https://sammi.solutions/) that allows you to control Veadotube mini using their WebSocket.
+![](/assets/logo%20not%20alpha%20in%20head.png)
 I made this in like two days because it was no extension already for Veadotube mini. Thanks to HueVirtualCreature, because my code is based on [theirs](https://github.com/HueVirtualCreature/SAMMIVtubeStudioExtension).
 
 ## Table of Contents
