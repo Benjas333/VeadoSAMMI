@@ -1,5 +1,6 @@
 > [!WARNING]
 > ~~This repo will be archived because there's already a SAMMI extension for veadotube mini: [Veadotube WebSocket](https://github.com/BoltTheMeerkat/veadotube-websocket)~~
+
 > [!TIP]
 > Never mind, I have a lot of ideas.
 
