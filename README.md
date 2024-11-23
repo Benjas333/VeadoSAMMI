@@ -118,9 +118,11 @@ Response format: {
 
 ## TO DO
 - [x] Add commands that use state ID besides of the state name commands.
-- [/] Change commands that use state name to display format: `name:id`. **Discarded.**
+- [ ] ~~Change commands that use state name to display format: `name:id`.~~ **Discarded.**
 - [x] Add random avatar state command.
-- [ ] Find an implement utility for listen and unlisten endpoints.
+- [ ] Add auto detect WebSocket instance.
+- [ ] Add compatibility with multiple instances at the same time.
+- [ ] Find an implement a useful utility for listen and unlisten endpoints.
 
 ## Contributing
 Any contribution would be appreciated.
