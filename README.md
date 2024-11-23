@@ -1,3 +1,6 @@
+[!WARNING]
+This repo will be archived because there's already a SAMMI extension for veadotube mini: [Veadotube WebSocket](https://github.com/BoltTheMeerkat/veadotube-websocket)
+
 # SAMMIVeadotubeMiniExtension
 This is an extension for [SAMMI](https://sammi.solutions/) that allows you to control Veadotube mini using their WebSocket.
 <!-- ![](/assets/logo%20not%20alpha%20in%20head.png) -->
