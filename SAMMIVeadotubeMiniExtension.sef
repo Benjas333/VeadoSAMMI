@@ -283,7 +283,7 @@ function SAMMIVM_InsertCommandHooks() {
                         if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
                 });
 
-                let states = Object.entries(window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName);
+                let states = Object.values(window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName);
                 requestSetState(states[Math.floor(Math.random() * states.length)][1]);
         });
 }
@@ -298,6 +298,7 @@ function interpretResponse(responseData) {
         if (responseData.id !== 'mini') VEADOTUBE_MINI_LOGGER.warn("Received an unhandled id value: " + responseData.id + "\nRaw response data: " + responseData)
 
         let payload = responseData.payload;
+        let vm_func = null;
         switch (payload.event) {
                 case "list":
                         VEADOTUBE_MINI_LOGGER.info(`Found ${payload.states.length} Avatar States.`);
@@ -335,17 +336,17 @@ function interpretResponse(responseData) {
                 case "push":
                 case "pop":
                         // HACK: Used peek queue because websocket response always contains peek
-                        let func = window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.shift();
-                        if (!func) break;
-                        func({
+                        vm_func = window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.shift();
+                        if (!vm_func) break;
+                        vm_func({
                                 name: window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromId[payload.state],
                                 id: payload.state,
                         });
                         break;
                 case "thumb":
-                        let func = window.VEADOTUBE_MINI_PLUGIN_NAME.queues[payload.event].shift();
-                        if (!func) break;
-                        func({
+                        vm_func = window.VEADOTUBE_MINI_PLUGIN_NAME.queues[payload.event].shift();
+                        if (!vm_func) break;
+                        vm_func({
                                 name: window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromId[payload.state],
                                 id: payload.state,
                                 width: payload.width,
