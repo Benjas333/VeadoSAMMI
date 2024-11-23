@@ -206,7 +206,7 @@ function SAMMIVM_InsertCommandHooks() {
                         if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
                 });
 
-                requestSetState(window.VEADOTUBE_MINI_PLUGIN_NAME.states[SAMMI_JSON.state]);
+                requestSetState(window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName[SAMMI_JSON.state]);
         });
 
         sammiclient.on('Veadotube mini - Push Avatar State', async (json) => {
@@ -216,7 +216,7 @@ function SAMMIVM_InsertCommandHooks() {
                         if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
                 });
 
-                requestPushState(window.VEADOTUBE_MINI_PLUGIN_NAME.states[SAMMI_JSON.state]);
+                requestPushState(window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName[SAMMI_JSON.state]);
         });
 
         sammiclient.on('Veadotube mini - Pop Avatar State', async (json) => {
@@ -226,7 +226,7 @@ function SAMMIVM_InsertCommandHooks() {
                         if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
                 });
 
-                requestPopState(window.VEADOTUBE_MINI_PLUGIN_NAME.states[SAMMI_JSON.state]);
+                requestPopState(window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName[SAMMI_JSON.state]);
         });
 
         sammiclient.on('Veadotube mini - Thumb Avatar State', async (json) => {
@@ -236,7 +236,7 @@ function SAMMIVM_InsertCommandHooks() {
                         if (!!SAMMI_JSON.variable) SAMMI.setVariable(SAMMI_JSON.variable, websocketResponse, SAMMI_JSON.FromButton);
                 });
 
-                requestThumbState(window.VEADOTUBE_MINI_PLUGIN_NAME.states[SAMMI_JSON.state]);
+                requestThumbState(window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName[SAMMI_JSON.state]);
         });
 
         // ID commands
@@ -283,7 +283,7 @@ function SAMMIVM_InsertCommandHooks() {
                         if (!!SAMMI_JSON.oldState) SAMMI.setVariable(SAMMI_JSON.oldState, websocketResponse, SAMMI_JSON.FromButton);
                 });
 
-                let states = Object.entries(window.VEADOTUBE_MINI_PLUGIN_NAME.states);
+                let states = Object.entries(window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName);
                 requestSetState(states[Math.floor(Math.random() * states.length)][1]);
         });
 }
@@ -298,16 +298,17 @@ function interpretResponse(responseData) {
         if (responseData.id !== 'mini') VEADOTUBE_MINI_LOGGER.warn("Received an unhandled id value: " + responseData.id + "\nRaw response data: " + responseData)
 
         let payload = responseData.payload;
-        let arg = {};
         switch (payload.event) {
                 case "list":
                         VEADOTUBE_MINI_LOGGER.info(`Found ${payload.states.length} Avatar States.`);
-                        window.VEADOTUBE_MINI_PLUGIN_NAME.states = {};
+                        window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName = {};
+                        window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromId = {};
                         payload.states.forEach(element => {
-                                window.VEADOTUBE_MINI_PLUGIN_NAME.states[element.name] = element.id;
+                                window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName[element.name] = element.id;
+                                window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromId[element.id] = element.name;
                         });
 
-                        let state_names = Object.keys(window.VEADOTUBE_MINI_PLUGIN_NAME.states);
+                        let state_names = Object.keys(window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName);
 
                         SAMMI.extCommand('Veadotube mini - Set Avatar State', 3355443, 52, {
                                 state: ['State to set', 20, '', null, state_names],
@@ -329,25 +330,28 @@ function interpretResponse(responseData) {
                                 variable: saveAsVariableBox
                         });
                         break;
-                case "thumb":
-                        arg = {
-                                ...arg,
-                                width: payload.width,
-                                height: payload.height,
-                                png: payload.png
-                        }
                 case "peek":
                 case "set":
                 case "push":
                 case "pop":
+                        // HACK: Used peek queue because websocket response always contains peek
+                        let func = window.VEADOTUBE_MINI_PLUGIN_NAME.queues.peek.shift();
+                        if (!func) break;
+                        func({
+                                name: window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromId[payload.state],
+                                id: payload.state,
+                        });
+                        break;
+                case "thumb":
                         let func = window.VEADOTUBE_MINI_PLUGIN_NAME.queues[payload.event].shift();
                         if (!func) break;
-                        arg = {
-                                name: Object.keys(window.VEADOTUBE_MINI_PLUGIN_NAME.states).filter(key => window.VEADOTUBE_MINI_PLUGIN_NAME.states[key] === payload.state)[0],
+                        func({
+                                name: window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromId[payload.state],
                                 id: payload.state,
-                                ...arg,
-                        };
-                        func(arg);
+                                width: payload.width,
+                                height: payload.height,
+                                png: payload.png,
+                        });
                         break;
                 default:
                         VEADOTUBE_MINI_LOGGER.warn("Received an unknown event payload value: " + payload.event + "\nRaw response payload: " + payload);
@@ -517,7 +521,8 @@ function SAMMIVM_initialize() {
         VEADOTUBE_MINI_LOGGER.info("Started $!VERSIONNUMBER!$");
         
         window.VEADOTUBE_MINI_PLUGIN_NAME = {};
-        if (!window.VEADOTUBE_MINI_PLUGIN_NAME.states) window.VEADOTUBE_MINI_PLUGIN_NAME.states = {};
+        if (!window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName) window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromName = {};
+        if (!window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromId) window.VEADOTUBE_MINI_PLUGIN_NAME.statesFromId = {};
         if (!window.VEADOTUBE_MINI_PLUGIN_NAME.queues) {
                 window.VEADOTUBE_MINI_PLUGIN_NAME.queues = {
                         peek: [],
