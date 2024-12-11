@@ -1,10 +1,10 @@
 > [!WARNING]
-> [v2.0.0](https://github.com/Benjas333/SAMMIVeadotubeMiniExtension/releases/tag/v2.0.0) will be the last release compatible with veadotube v2.0a and older. Next releases will be focused on the new v2.1 features and endpoints.
+> [v2.0.0](https://github.com/Benjas333/VeadoSAMMI/releases/tag/v2.0.0) will be the last release compatible with veadotube mini v2.0a and older. Next releases will be focused on the new v2.1 features and endpoints.
 
-# SAMMIVeadotubeMiniExtension
-This is an extension for [SAMMI](https://sammi.solutions/) that allows you to control Veadotube mini using their WebSocket.
+# VeadoSAMMI (A Veadotube extension for SAMMI)
+This is an extension for [SAMMI](https://sammi.solutions/) that allows you to control [Veadotube](https://veado.tube/) using its WebSocket. It should be compatible with live and editor versions of Veadotube, but I don't have access to them, so I'm not sure.
 <!-- ![](/assets/logo%20not%20alpha%20in%20head.png) -->
-I made this in like two days because it was no extension already for Veadotube mini. Thanks to HueVirtualCreature, because my code is based on [theirs](https://github.com/HueVirtualCreature/SAMMIVtubeStudioExtension).
+Thanks to HueVirtualCreature, because my code is based on [theirs](https://github.com/HueVirtualCreature/SAMMIVtubeStudioExtension).
 
 ## Table of Contents
 - [Usage](#usage)
@@ -23,11 +23,11 @@ I made this in like two days because it was no extension already for Veadotube m
 - [Contributing](#contributing)
 - [Links](#links)
 
-## Usage
+## Usage (for mini version)
 ### Requirements
 - [veadotube mini](https://olmewe.itch.io/veadotube-mini)
 - [SAMMI](https://sammi.solutions/docs/download)
-- [extension release](https://github.com/Benjas333/SAMMIVeadotubeMiniExtension/releases/latest)
+- [extension release](https://github.com/Benjas333/VeadoSAMMI/releases/latest)
 
 ### Installation
 1. Download the .sef file.

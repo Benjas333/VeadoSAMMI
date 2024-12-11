@@ -13,14 +13,14 @@ $newVersion = "{0}.{1}.{2}.{3}" -f $major, $minor, $patch, $build
 
 Set-Content -Path.\version.txt -Value $newVersion
 
-$newFile = "builds\SAMMIVeadotubeMiniExtension.v$newVersion.sef"
+$newFile = "builds\VeadoSAMMI.v$newVersion.sef"
 
 if (Test-Path -Path $newFile) {
         Write-Host "The copied file $newFile already exists. Exiting the script."
         exit
 }
 
-Copy-Item -Path .\SAMMIVeadotubeMiniExtension.sef -Destination $newFile -Force
+Copy-Item -Path .\VeadoSAMMI.sef -Destination $newFile -Force
 
 $exampleDeckJson = Get-Content -Path .\example_deck.json
 
