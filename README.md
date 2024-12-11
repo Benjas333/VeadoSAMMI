@@ -1,8 +1,5 @@
 > [!WARNING]
-> ~~This repo will be archived because there's already a SAMMI extension for veadotube mini: [Veadotube WebSocket](https://github.com/BoltTheMeerkat/veadotube-websocket)~~
-
-> [!TIP]
-> Never mind, I have a lot of ideas.
+> [v2.0.0](https://github.com/Benjas333/SAMMIVeadotubeMiniExtension/releases/tag/v2.0.0) will be the last release compatible with veadotube v2.0a and older. Next releases will be focused on the new v2.1 features and endpoints.
 
 # SAMMIVeadotubeMiniExtension
 This is an extension for [SAMMI](https://sammi.solutions/) that allows you to control Veadotube mini using their WebSocket.
@@ -16,12 +13,12 @@ I made this in like two days because it was no extension already for Veadotube m
   - [Launching](#launching)
 
 - [Commands](#commands)
-  - [Veadotube mini - Peek Avatar State](#veadotube-mini---peek-avatar-state)
-  - [Veadotube mini - Set Avatar State](#veadotube-mini---set-avatar-state)
-  - [Veadotube mini - Push Avatar State](#veadotube-mini---push-avatar-state)
-  - [Veadotube mini - Pop Avatar State](#veadotube-mini---pop-avatar-state)
-  - [Veadotube mini - Get Avatar State Thumbnail](#veadotube-mini---thumb-avatar-state)
-  - [Veadotube mini - Set Random Avatar State](#veadotube-mini---set-random-avatar-state)
+  - [VeadoSAMMI - Peek Avatar State](#veadotube-mini---peek-avatar-state)
+  - [VeadoSAMMI - Set Avatar State](#veadotube-mini---set-avatar-state)
+  - [VeadoSAMMI - Push Avatar State](#veadotube-mini---push-avatar-state)
+  - [VeadoSAMMI - Pop Avatar State](#veadotube-mini---pop-avatar-state)
+  - [VeadoSAMMI - Get Avatar State Thumbnail](#veadotube-mini---thumb-avatar-state)
+  - [VeadoSAMMI - Set Random Avatar State](#veadotube-mini---set-random-avatar-state)
 - [TO DO](#to-do)
 - [Contributing](#contributing)
 - [Links](#links)
@@ -45,7 +42,7 @@ I made this in like two days because it was no extension already for Veadotube m
 - From here, you should see in the SAMMI alerts area that the extension successfully connected to veadotube mini.
 
 ## Commands
-- ### Veadotube mini - Peek Avatar State
+- ### VeadoSAMMI - Peek Avatar State
 Peek the actual avatar state.
 
 Param | Description
@@ -59,7 +56,7 @@ Response format: {
         id: string
 }
 
-- ### Veadotube mini - Set Avatar State
+- ### VeadoSAMMI - Set Avatar State
 Set the actual avatar state to another one.
 
 Param | Description
@@ -74,7 +71,7 @@ Response format: {
         id: string
 }
 
-- ### Veadotube mini - Push Avatar State
+- ### VeadoSAMMI - Push Avatar State
 Push an avatar state over the actual avatar state.
 
 Param | Description
@@ -89,7 +86,7 @@ Response format: {
         id: string
 }
 
-- ### Veadotube mini - Pop Avatar State
+- ### VeadoSAMMI - Pop Avatar State
 Pop an avatar state from the actual avatar state (if there's any).
 
 Param | Description
@@ -104,7 +101,7 @@ Response format: {
         id: string
 }
 
-- ### Veadotube mini - Get Avatar State Thumbnail
+- ### VeadoSAMMI - Get Avatar State Thumbnail
 Get the thumbnail from an avatar state.
 
 Param | Description
@@ -122,7 +119,7 @@ Response format: {
         png: base64
 }
 
-- ### Veadotube mini - Set Random Avatar State
+- ### VeadoSAMMI - Set Random Avatar State
 Set the actual avatar state to a random one.
 
 Param | Description
