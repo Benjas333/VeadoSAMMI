@@ -20,7 +20,8 @@ I made this in like two days because it was no extension already for Veadotube m
   - [Veadotube mini - Set Avatar State](#veadotube-mini---set-avatar-state)
   - [Veadotube mini - Push Avatar State](#veadotube-mini---push-avatar-state)
   - [Veadotube mini - Pop Avatar State](#veadotube-mini---pop-avatar-state)
-  - [Veadotube mini - Thumb Avatar State](#veadotube-mini---thumb-avatar-state)
+  - [Veadotube mini - Get Avatar State Thumbnail](#veadotube-mini---thumb-avatar-state)
+  - [Veadotube mini - Set Random Avatar State](#veadotube-mini---set-random-avatar-state)
 - [TO DO](#to-do)
 - [Contributing](#contributing)
 - [Links](#links)
@@ -49,6 +50,7 @@ Peek the actual avatar state.
 
 Param | Description
 ------------- | -------------
+Instance | Specify the instance to manipulate.
 Save Variable As | Specify the variable name that you want the response to be saved into.
 Delay (ms) | Native to SAMMI.
 
@@ -62,6 +64,7 @@ Set the actual avatar state to another one.
 
 Param | Description
 ------------- | -------------
+Instance | Specify the instance to manipulate.
 State to set | Specify the new avatar state by avatar state name.
 Save Previous State As | Specify the variable name that you want the response to be saved into.
 Delay (ms) | Native to SAMMI.
@@ -76,6 +79,7 @@ Push an avatar state over the actual avatar state.
 
 Param | Description
 ------------- | -------------
+Instance | Specify the instance to manipulate.
 State to push | Specify the new overlapped avatar state name.
 Save Previous State As | Specify the variable name that you want the response to be saved into.
 Delay (ms) | Native to SAMMI.
@@ -90,6 +94,7 @@ Pop an avatar state from the actual avatar state (if there's any).
 
 Param | Description
 ------------- | -------------
+Instance | Specify the instance to manipulate.
 State to pop | Specify the overlapped avatar state name to remove.
 Save Previous State As | Specify the variable name that you want the response to be saved into.
 Delay (ms) | Native to SAMMI.
@@ -99,12 +104,13 @@ Response format: {
         id: string
 }
 
-- ### Veadotube mini - Thumb Avatar State
-Get more detailed information about an avatar state.
+- ### Veadotube mini - Get Avatar State Thumbnail
+Get the thumbnail from an avatar state.
 
 Param | Description
 ------------- | -------------
-State to thumb | Specify the avatar state name to obtain info from.
+Instance | Specify the instance to manipulate.
+State to thumb | Specify the avatar state name to obtain the thumbnail from.
 Save Variable As | Specify the variable name that you want the response to be saved into.
 Delay (ms) | Native to SAMMI.
 
@@ -116,13 +122,28 @@ Response format: {
         png: base64
 }
 
+- ### Veadotube mini - Set Random Avatar State
+Set the actual avatar state to a random one.
+
+Param | Description
+------------- | -------------
+Instance | Specify the instance to manipulate.
+Save Previous State As | Specify the variable name that you want the response to be saved into.
+Delay (ms) | Native to SAMMI.
+
+Response format: {
+        name: string,
+        id: string
+}
+
 ## TO DO
 - [x] Add commands that use state ID besides of the state name commands.
 - [ ] ~~Change commands that use state name to display format: `name:id`.~~ **Discarded.**
 - [x] Add random avatar state command.
-- [ ] Add auto detect WebSocket instance.
-- [ ] Add compatibility with multiple instances at the same time.
-- [ ] Find an implement a useful utility for listen and unlisten endpoints.
+- [x] Add auto detect WebSocket instance.
+- [x] Add compatibility with multiple instances at the same time.
+- [x] Find an implement a useful utility for listen and unlisten endpoints.
+- [ ] Add support for >= veadotube mini 2.1a.
 
 ## Contributing
 Any contribution would be appreciated.
