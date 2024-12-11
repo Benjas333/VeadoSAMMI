@@ -26,4 +26,16 @@ $exampleDeckJson = Get-Content -Path .\example_deck.json
 
 (Get-Content -Path $newFile) | ForEach-Object {$_ -replace '{"exampleDeckData":"\$!ExampleDeckData!\$"}', $exampleDeckJson} | Set-Content -Path $newFile
 
+$mainScript = Get-Content -Path .\script.js -Raw
+
+(Get-Content -Path $newFile -Raw) | ForEach-Object {$_ -replace '\$!MAINSCRIPT!\$', $mainScript} | Set-Content -Path $newFile
+
+$instanceBoxHTML = Get-Content -Path .\templates\instance_box_template.html -Raw
+
+(Get-Content -Path $newFile -Raw) | ForEach-Object {$_ -replace '\$!INSTANCEBOXHTML!\$', $instanceBoxHTML} | Set-Content -Path $newFile
+
+$mainHTML = Get-Content -Path .\templates\main_template.html -Raw
+
+(Get-Content -Path $newFile -Raw) | ForEach-Object {$_ -replace '\$!MAINHTML!\$', $mainHTML} | Set-Content -Path $newFile
+
 (Get-Content -Path $newFile) | ForEach-Object {$_ -replace '\$!VERSIONNUMBER!\$', "v$newVersion"} | Set-Content -Path $newFile
