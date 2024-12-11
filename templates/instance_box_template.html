@@ -1,0 +1,49 @@
+<div class="veado-instance-box" id="{{veado-instance-id}}">
+    <div class="veadotube-row">
+        <span>Instance ID:</span>
+        <span class="veadotube-instance-id">{{veado-instance-id}}</span>
+        <div class="veado-space"></div>
+        <span>Type:</span>
+        <span class="veadotube-instance-type">{{veado-instance-type}}</span>
+    </div>
+    <hr>
+    <div class="veado-row">
+        Status:
+        <span class="veadotube-connection-status">Disconnected</span>
+        <button class="btn btn-primary btn-sm veado-btn refresh-status-btn">
+            Manual Refresh Status
+        </button>
+    </div>
+    <p></p>
+    Websocket server:
+    <span>{{veado-instance-server}}</span>
+    <p></p>
+    Window title:
+    <span>{{veado-instance-name}}</span>
+    <p></p>
+    <div class="veado-row">
+        <button class="btn btn-primary btn-sm veado-btn connect-websocket-btn">
+            Connect WebSocket
+        </button>
+        <button class="btn btn-primary btn-sm veado-btn refresh-states-btn">
+            Refresh Avatar States
+        </button>
+    </div>
+    <!-- <p></p> -->
+    <hr>
+    <p>
+        Extension Trigger
+        <button class="btn btn-primary btn-sm veado-btn toggle-listener-btn">
+            Start Listener
+        </button>
+        </p>
+        <p class="veado-listener-box" style="display: none;">
+        Message:
+        <span class="veado-listener-id">null</span>
+        <button class="btn btn-primary btn-sm veado-btn copy-listener-btn">
+            Copy
+        </button>
+        </p>
+    <hr>
+    {{veado-box-type}}
+</div>

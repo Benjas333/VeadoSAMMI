@@ -1,0 +1,140 @@
+<style>
+* {
+    box-sizing: border-box;
+}
+.veado-switch-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.veado-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+    background-color: #ccc;
+    border-radius: 25px;
+}
+.veado-switch input {
+    opacity: 0;
+}
+.veado-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 25px;
+}
+.veado-slider:before {
+    position: absolute;
+    content: "";
+    height: 19px;
+    width: 19px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+input:checked + .veado-slider {
+    background-color: #4caf50;
+}
+input:checked + .veado-slider:before {
+    transform: translateX(24px);
+}
+.veado-manual-box {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.1);
+}
+.veado-btn {
+    /* cursor: pointer; */
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.veado-instance-box {
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: rgba(0,0,0,.1);
+}
+.veadotube-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+}
+.veadotube-instance-id,
+.veadotube-instance-type {
+    display: inline-block;
+}
+.veado-column hr {
+    margin: 0.5rem 0;
+}
+.veado-column p {
+    margin-bottom: 0.25rem;
+}
+.veado-space {
+    flex-grow: 1;
+}
+</style>
+<div class="veado-column">
+    <h1>Veadotube Extension</h1>
+    <p>
+        Interact and manipulates Veadotube through the Veadotube's
+        WebSocket.
+    </p>
+</div>
+<div class="veado-column">
+    <p>Created by Benjas333</p>
+    <a href="https://x.com/ElBenjas333">Twitter.</a>
+    <a href="https://github.com/Benjas333/SAMMIVeadotubeMiniExtension">GitHub.</a>
+    <p>Version: $!VERSIONNUMBER!$</p>
+    <div class="veado-switch-container">
+        <label class="veado-switch">
+            <input type="checkbox" id="toggleSlider" />
+            <span class="veado-slider"></span>
+        </label>
+        <span>Auto-reconnect if connection is lost?</span>
+    </div>
+    <button class="btn btn-primary btn-sm veado-btn" onclick="veado__scanForInstances();">
+        Re-scan for Instances
+    </button>
+    <span style="font-size: 0.75rem;">
+        (This will disconnect all instances that are currently connected)
+    </span>
+    <p>
+        Manual connection:
+    </p>
+    <div class="veado-manual-box">
+        <span>Websocket server:</span>
+        <input type="text" id="veadotube-websocket-server" />
+        <p></p>
+        <span>Window title:</span>
+        <input type="text" id="veadotube-window-title" />
+        <p></p>
+        <div class="veado-row">
+            <button class="btn btn-primary btn-sm veado-btn" onclick="veado__addManualInstance();">
+                Add Instance
+            </button>
+        </div>
+    </div>
+    <p>
+        Instances:
+    </p>
+    <div class="veado-instances-list">
+        
+    </div>
+</div>
