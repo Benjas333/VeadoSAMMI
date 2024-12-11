@@ -37,8 +37,8 @@ Thanks to HueVirtualCreature, because my code is based on [theirs](https://githu
 ### Launching
 - The Bridge **must be** opened for the extension to work.
 - In veadotube mini > program settings > websocket server make sure is enabled.
-- In the extension tab, set up the WebSocket server url and the Window title. You can get these values from veadotube mini > program settings.
-- When you have finished setting up the WebSocket server, click `Connect WebSocket`.
+- The instances should be automatically detected by the extension in the extension tab. In case an instance is not found, you can add it manually typing the WebSocket server url and the Window title. You can get these values from veadotube mini > program settings.
+- To start using the extension just click `Connect WebSocket`.
 - From here, you should see in the SAMMI alerts area that the extension successfully connected to veadotube mini.
 
 ## Commands
