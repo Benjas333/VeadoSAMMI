@@ -16,10 +16,13 @@
     </div>
     <p></p>
     Websocket server:
-    <span>{{veado-instance-server}}</span>
+    <span class="veadotube-instance-server">{{veado-instance-server}}</span>
     <p></p>
     Window title:
-    <span>{{veado-instance-name}}</span>
+    <span class="veadotube-instance-name">{{veado-instance-name}}</span>
+    <p></p>
+    Version:
+    <span class="veadotube-instance-version">{{veado-instance-version}}</span>
     <p></p>
     <div class="veado-row">
         <button class="btn btn-primary btn-sm veado-btn connect-websocket-btn">
@@ -32,18 +35,24 @@
     <!-- <p></p> -->
     <hr>
     <p>
-        Extension Trigger
-        <button class="btn btn-primary btn-sm veado-btn toggle-listener-btn">
+        Extension Triggers
+        <!-- <button class="btn btn-primary btn-sm veado-btn toggle-listener-btn">
             Start Listener
-        </button>
-        </p>
-        <p class="veado-listener-box" style="display: none;">
-        Message:
-        <span class="veado-listener-id">null</span>
-        <button class="btn btn-primary btn-sm veado-btn copy-listener-btn">
+        </button> -->
+    </p>
+    <p class="veado-listener-box">
+        Avatar State Change:
+        <span class="veado-state-listener-id">{{veado-instance-state-listener}}</span>
+        <button class="btn btn-primary btn-sm veado-btn copy-state-listener-btn">
             Copy
         </button>
-        </p>
+        <p></p>
+        Push-to-talk*:
+        <span class="veado-ptt-listener-id">{{veado-instance-ptt-listener}}</span>
+        <button class="btn btn-primary btn-sm veado-btn copy-ptt-listener-btn">
+            Copy
+        </button>
+    </p>
     <hr>
     {{veado-box-type}}
 </div>
