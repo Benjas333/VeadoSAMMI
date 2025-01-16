@@ -3,7 +3,8 @@ let veadotube_manual_instances = [];
 
 const VEADO_SAMMI__PLUGIN_NAME = 'VeadoSAMMI';
 const VEADOTUBE__CHANNELS_PREFIXES = {
-        nodes: 'nodes:'
+        nodes: 'nodes:',
+        instance: 'instance:',
 };
 
 const VEADOTUBE__WebSocket_StringStates = {
@@ -23,64 +24,129 @@ const VEADO_SAMMI__saveOldStateAsVariableBox = {
         oldState: ["Save Previous State As", 14, ""]
 };
 
+const VEADO_SAMMI__extCommands_n_args = {
+        State: {
+                'Peek': {
+                        baseCmdStr: "Peek Actual Avatar State",
+                        args: VEADO_SAMMI__saveAsVariableBox,
+                        queue: "stateChange",
+                },
+                'Random': {
+                        baseCmdStr: "Set Random Avatar State",
+                        args: VEADO_SAMMI__saveOldStateAsVariableBox,
+                        queue: "stateChange",
+                },
+        },
+        PTT: {
+                'Get': {
+                        baseCmdStr: "(Beta) Get Actual Push-To-Talk State",
+                        args: VEADO_SAMMI__saveAsVariableBox,
+                        queue: "PTTChange",
+                },
+                'Toggle': {
+                        baseCmdStr: "(Beta) Toggle Push-To-Talk State",
+                        args: VEADO_SAMMI__saveOldStateAsVariableBox,
+                        queue: "PTTChange",
+                },
+        },
+        Number: {
+                'Get': {
+                        baseCmdStr: "(Beta) Get Actual Number State",
+                        args: VEADO_SAMMI__saveAsVariableBox,
+                        queue: "numberChange",
+                },
+        },
+};
+
 const VEADO_SAMMI__extCommands_w_list = {
-        'Set': {
-                baseCmdStr: "Set Avatar State",
-                args: VEADO_SAMMI__saveOldStateAsVariableBox,
-                queue: "peek",
+        State: {
+                'Set': {
+                        baseCmdStr: "Set Avatar State",
+                        args: VEADO_SAMMI__saveOldStateAsVariableBox,
+                        queue: "stateChange",
+                },
+                'Push': {
+                        baseCmdStr: "Push Avatar State",
+                        args: VEADO_SAMMI__saveOldStateAsVariableBox,
+                        queue: "stateChange",
+                },
+                'Pop': {
+                        baseCmdStr: "Pop Avatar State",
+                        args: VEADO_SAMMI__saveOldStateAsVariableBox,
+                        queue: "stateChange",
+                },
+                'Toggle': {
+                        baseCmdStr: "Toggle Avatar State",
+                        args: VEADO_SAMMI__saveOldStateAsVariableBox,
+                        queue: "stateChange",
+                },
+                'Thumbnail': {
+                        baseCmdStr: "Get Avatar State Thumbnail",
+                        args: VEADO_SAMMI__saveAsVariableBox,
+                        queue: "thumbnail",
+                },
         },
-        'Push': {
-                baseCmdStr: "Push Avatar State",
-                args: VEADO_SAMMI__saveOldStateAsVariableBox,
-                queue: "peek",
-        },
-        'Pop': {
-                baseCmdStr: "Pop Avatar State",
-                args: VEADO_SAMMI__saveOldStateAsVariableBox,
-                queue: "peek",
-        },
-        'Thumbnail': {
-                baseCmdStr: "Get Avatar State Thumbnail",
-                args: VEADO_SAMMI__saveAsVariableBox,
-                queue: "thumb",
-        },
+        PTT: {},
+        Number: {},
 };
 
 const VEADO_SAMMI__extCommands_w_str = {
-        'Set (by ID)': {
-                baseCmdStr: "Set Avatar State (by ID)",
-                args: VEADO_SAMMI__saveOldStateAsVariableBox,
-                queue: "peek",
-        },
-        'Push (by ID)': {
-                baseCmdStr: "Push Avatar State (by ID)",
-                args: VEADO_SAMMI__saveOldStateAsVariableBox,
-                queue: "peek",
-        },
-        'Pop (by ID)': {
-                baseCmdStr: "Pop Avatar State (by ID)",
-                args: VEADO_SAMMI__saveOldStateAsVariableBox,
-                queue: "peek",
-        },
-        'Thumbnail (by ID)': {
-                baseCmdStr: "Get Avatar State Thumbnail (by ID)",
-                args: VEADO_SAMMI__saveAsVariableBox,
-                queue: "thumb",
+        State: {},
+        PTT: {},
+        Number: {
+                'Set': {
+                        baseCmdStr: "(Beta) Set Number",
+                        args: {
+                                ...VEADO_SAMMI__saveOldStateAsVariableBox,
+                                min: ["Min (Optional)", 14, ""],
+                                max: ["Max (Optional)", 14, ""],
+                        },
+                        queue: "numberChange",
+                },
+                'Add': {
+                        baseCmdStr: "(Beta) Add Number",
+                        args: {
+                                ...VEADO_SAMMI__saveOldStateAsVariableBox,
+                                min: ["Min (Optional)", 14, ""],
+                                max: ["Max (Optional)", 14, ""],
+                        },
+                        queue: "numberChange",
+                },
         },
 };
 
-const VEADO_SAMMI__extCommands_n_args = {
-        'Peek': {
-                baseCmdStr: "Peek Actual Avatar State",
-                args: VEADO_SAMMI__saveAsVariableBox,
-                queue: "peek",
+const VEADO_SAMMI__extCommands_w_bool = {
+        State: {},
+        PTT: {
+                'Set': {
+                        baseCmdStr: "(Beta) Set Push-To-Talk State",
+                        args: VEADO_SAMMI__saveOldStateAsVariableBox,
+                        queue: "PTTChange",
+                },
         },
-        'Random': {
-                baseCmdStr: "Set Random Avatar State",
-                args: VEADO_SAMMI__saveOldStateAsVariableBox,
-                queue: "peek",
-        },
+        Number: {},
 };
+
+const VEADO_SAMMI__extCommands = {
+        State: {
+                ...VEADO_SAMMI__extCommands_w_bool.State,
+                ...VEADO_SAMMI__extCommands_w_str.State,
+                ...VEADO_SAMMI__extCommands_w_list.State,
+                ...VEADO_SAMMI__extCommands_n_args.State,
+        },
+        PTT: {
+                ...VEADO_SAMMI__extCommands_w_bool.PTT,
+                ...VEADO_SAMMI__extCommands_w_str.PTT,
+                ...VEADO_SAMMI__extCommands_w_list.PTT,
+                ...VEADO_SAMMI__extCommands_n_args.PTT,
+        },
+        Number: {
+                ...VEADO_SAMMI__extCommands_w_bool.Number,
+                ...VEADO_SAMMI__extCommands_w_str.Number,
+                ...VEADO_SAMMI__extCommands_w_list.Number,
+                ...VEADO_SAMMI__extCommands_n_args.Number,
+        },
+}
 
 
 class VEADO_SAMMI__LOGGER {
@@ -132,50 +198,204 @@ class VEADO_SAMMI__LOGGER {
 
 class VEADOTUBE__Instance {
         constructor(parameters) {
-                this.file = parameters.file;
-                this.fullName = parameters.name;
-                this.name = this.fullName.startsWith('veadotube') ? this.fullName.split(' - ').slice(1).join(' - ').trim() : this.fullName;
-                this.server = parameters.server;
-                this.serverUrl = `ws://${this.server}?n=${this.fullName}`.replaceAll(' ', '%20');
-                this.time = parameters.time;
-                this.webSocket = null;
-                this.listener = null;
                 this.index = parameters.index;
-                this.longID = `${this.index}-${this.fullName}`;
-                this.shortID = `${this.index}-${this.name}`;
-                this.listenerID = `Veadotube-Trigger:${this.shortID}`;
-                this.logger = new VEADO_SAMMI__LOGGER(this.shortID);
-                this.statesFromName = {};
-                this.statesFromID = {};
+                this.file = parameters.file || parameters.id;
+                this.version = parameters.version;
+                this.fullName = parameters.name;
+                this.time = parameters.time;
+                this.language = parameters.language;
+                this.server = parameters.server;
+                this.webSocket = null;
+                this.states = {};
                 this.queues = {
-                        peek: [],
-                        set: [],
-                        push: [],
-                        pop: [],
-                        thumb: []
+                        stateChange: [],
+                        // set: [],
+                        // push: [],
+                        // pop: [],
+                        thumbnail: [],
+                        PTTChange: [],
+                        numberChange: [],
+                };
+                this.state = {
+                        actual: null,
+                        previous: null,
+                };
+                this.ptt = {
+                        actual: null,
+                        previous: null,
+                };
+                this.number = {
+                        actual: null,
+                        previous: null,
+                }
+
+                this.versionWarning = (commandName = null) => {
+                        if (!!this.version) return;
+                        this.logger.warn(`${commandName || 'This'} command could not work on the version you are currently on.`);
+                };
+                this.typeWarning = (commandName = null) => {
+                        if (this.type !== "mini") return;
+                        this.logger.warn(`${commandName || 'This'} command could not work on the instance type you are currently on.`);
                 };
 
-                this.type = null;
-                if (this.file) {
-                        const [type, launchTimestamp, processID] = this.file.split('-');
-                        this.type = type;
-                        this.launchTimestamp = launchTimestamp;
-                        this.processID = processID;
-                } else {
-                        this.createWebSocket(() => { this.requestListEvents() });
-                }
-                this.insertCommandsWithListedStates();
-                this.insertCommandsWithStringArgs();
-                this.insertCommandsWithNoArgs();
+                if (!this.file) {
+                        this.createWebSocket(() => {
+                                this.requestListEvents();
+                        });
+                } else if (!this.version && this.type === 'mini') this.logger.info('Veadotube mini 2.0a version or older detected. Please update Veadotube for a better experience.');
+
+                VEADO_SAMMI__insertCommandsWithListedStates(this);
+                VEADO_SAMMI__insertCommandsWithStringArgs(this);
+                VEADO_SAMMI__insertCommandsWithBooleanArgs(this);
+                VEADO_SAMMI__insertCommandsWithNoArgs(this);
                 this.insertCommandHooks();
                 this.initializeHTML();
         }
         
+        get instanceBox() {
+                return document.querySelector(`.veado-instance-box[id^="${this.index}-"]`);
+        }
+
+        get webSocketStatus() {
+                let status = this.webSocket ? this.webSocket.readyState : 3;
+                if (this.instanceBox) this.instanceBox.querySelector('.veadotube-connection-status').innerHTML = VEADOTUBE__WebSocket_StringStates[status];
+                return status;
+        }
+
+        get file() {
+                return this._file;
+        }
+
+        set file(value) {
+                this._file = value;
+                if (!value) return;
+                const [type, launchTimestamp, processID] = value.split('-');
+                this.type = type;
+                this.launchTimestamp = launchTimestamp;
+                this.processID = processID;
+        }
+
+        get fullName() {
+                return this._fullName;
+        }
+
+        set fullName(value) {
+                this._fullName = value;
+                this.name = value;
+                this.longID = value;
+                if (this.instanceBox) this.instanceBox.querySelector('.veadotube-instance-name').innerHTML = value;
+        }
+
+        get name() {
+                return this._name;
+        }
+
+        set name(value) {
+                let name = value.startsWith('veadotube') ? value.split(' - ').slice(1).join(' - ').trim() : value;
+                this._name = name;
+                this.shortID = name;
+        }
+
+        get longID() {
+                return this._longID;
+        }
+
+        set longID(value) {
+                this._longID = `${this.index}-${value}`;
+        }
+
+        get shortID() {
+                return this._shortID;
+        }
+
+        set shortID(value) {
+                let shortID = `${this.index}-${value}`;
+                this._shortID = shortID;
+                this.listenerStateID = shortID;
+                this.listenerPTTID = !!this.version ? shortID : 'NO COMPATIBLE VERSION';
+                this.logger = shortID;
+                if (this.instanceBox) this.instanceBox.querySelector('.veadotube-instance-id').innerHTML = shortID;
+        }
+
+        get listenerStateID() {
+                return this._listenerStateID;
+        }
+
+        set listenerStateID(value) {
+                let listenerStateID = `VeadoStateListener:${value}`;
+                this._listenerStateID = listenerStateID;
+                if (this.instanceBox) this.instanceBox.querySelector('.veado-state-listener-id').innerHTML = listenerStateID;
+        }
+
+        get listenerPTTID() {
+                return this._listenerPTTID;
+        }
+
+        set listenerPTTID(value) {
+                let listenerPTTID = `VeadoPTTListener:${value}`;
+                this._listenerPTTID = listenerPTTID;
+                if (this.instanceBox) this.instanceBox.querySelector('.veado-ptt-listener-id').innerHTML = listenerPTTID;
+        }
+
+        get logger() {
+                return this._logger;
+        }
+
+        set logger(id) {
+                this._logger = new VEADO_SAMMI__LOGGER(id);
+        }
+
+        get server() {
+                return this._server;
+        }
+
+        set server(value) {
+                this._server = value;
+                this.serverURL = value;
+                if (this.instanceBox) this.instanceBox.querySelector(".veadotube-instance-server").innerHTML = value;
+        }
+
+        get serverUrl() {
+                return this._serverUrl || `ws://${this.server}?n=VeadoSAMMI`.replaceAll(' ', '%20');
+        }
+
+        set serverUrl(IP) {
+                this._serverUrl = `ws://${IP}?n=VeadoSAMMI`.replaceAll(' ', '%20');
+        }
+
+        get version() {
+                return this._version;
+        }
+
+        set version(value) {
+                let version = value === "undefined" ? null : value;
+                this._version = version;
+                if (this.instanceBox) this.instanceBox.querySelector(".veadotube-instance-version").innerHTML = version || (this.type === "mini" ? '2.0a or older' : '<span style="color: red;">Unable</span> to get instance version');
+                if (!value && this.type === 'mini') this.logger?.info('Veadotube mini 2.0a version or older detected. Please update Veadotube for a better experience.');
+        }
+
+        get language() {
+                return this._language;
+        }
+
+        set language(value) {
+                this._language = value === "undefined" ? null : value;
+        }
+
+        get type() {
+                return this._type;
+        }
+
+        set type(value) {
+                this._type = value;
+                if (this.instanceBox) this.instanceBox.querySelector('.veadotube-instance-type').innerHTML = value;
+        }
+        
         async initializeHTML() {
-                document.querySelector('.veado-instances-list').innerHTML += VEADOTUBE__box_template.replaceAll("{{veado-instance-id}}", this.shortID).replaceAll("{{veado-instance-type}}", this.type).replaceAll("{{veado-instance-server}}", this.server).replaceAll("{{veado-instance-name}}", this.fullName).replaceAll("{{veado-box-type}}", this.file ? VEADOTUBE__type_box_auto_detected : VEADOTUBE__type_box_manual);
+                document.querySelector('.veado-instances-list').innerHTML += VEADOTUBE__box_template.replaceAll("{{veado-box-type}}", this.file ? VEADOTUBE__type_box_auto_detected : VEADOTUBE__type_box_manual).replaceAll("{{veado-instance-id}}", this.shortID).replaceAll("{{veado-instance-type}}", this.type).replaceAll("{{veado-instance-server}}", this.server).replaceAll("{{veado-instance-version}}", this.version || (this.type === "mini" ? '2.0a or older' : '<span style="color: red;">Unable</span> to get instance version')).replaceAll("{{veado-instance-state-listener}}", this.listenerStateID).replaceAll("{{veado-instance-ptt-listener}}", this.listenerPTTID).replaceAll("{{veado-instance-name}}", this.fullName);
                 
                 this.instanceBox.querySelector('.refresh-status-btn').addEventListener('click', () => {
-                        this.webSocketStatus
+                        this.webSocketStatus;
                 });
                 this.instanceBox.querySelector('.connect-websocket-btn').addEventListener('click', () => {
                         this.connectWebSocket();
@@ -183,20 +403,14 @@ class VEADOTUBE__Instance {
                 this.instanceBox.querySelector('.refresh-states-btn').addEventListener('click', () => {
                         this.refreshAvatarStates();
                 });
-                this.instanceBox.querySelector('.veado-listener-id').innerText = this.listenerID;
-                this.instanceBox.querySelector('.toggle-listener-btn').addEventListener('click', async () => {
-                        if (!this.listener) {
-                                this.connectListener();
-                        } else {
-                                await this.requestUnlistenStates();
-                                await this.disconnectWebSocket('listener');
-                        }
-                        this.listenerStatus;
+
+                this.instanceBox.querySelector('.copy-state-listener-btn').addEventListener('click', () => {
+                        navigator.clipboard.writeText(this.listenerStateID);
                 });
-                this.instanceBox.querySelector('.copy-listener-btn').addEventListener('click', () => {
-                        const listenerID = this.instanceBox.querySelector('.veado-listener-id').innerHTML;
-                        navigator.clipboard.writeText(listenerID);
+                this.instanceBox.querySelector('.copy-ptt-listener-btn').addEventListener('click', () => {
+                        navigator.clipboard.writeText(this.listenerPTTID);
                 });
+
                 if (!!this.file) return;
                 this.instanceBox.querySelector('.remove-instance-btn').addEventListener('click', async () => {
                         await this.destroy();
@@ -207,83 +421,172 @@ class VEADOTUBE__Instance {
         insertCommandHooks() {
                 if (!this.subscribedEvents) this.subscribedEvents = [];
 
-                let commands = {...VEADO_SAMMI__extCommands_n_args, ...VEADO_SAMMI__extCommands_w_list, ...VEADO_SAMMI__extCommands_w_str};
-                for (const event in commands) {
-                        const event_name = `${event}:${this.longID}`;
-                        const callback = async (json) => {
-                                const SAMMI_JSON = json.Data;
-                                this.queues[commands[event].queue].push((webSocketResponse) => {
-                                        let varArg = SAMMI_JSON[Object.keys(commands[event].args)[0]];
-                                        if (!!varArg) SAMMI.setVariable(varArg, webSocketResponse, SAMMI_JSON.FromButton);
-                                });
-
-                                this.getCommandHooksFunctions(event, SAMMI_JSON)();
-                        };
-                        sammiclient.on(event_name, callback);
-                        this.subscribedEvents.push({ event_name, callback });
+                for (const family in VEADO_SAMMI__extCommands) {
+                        const familyObj = VEADO_SAMMI__extCommands[family];
+                        for (const event in familyObj) {
+                                const event_name = `${event}:${family}:${this.longID}`;
+                                const callback = async (json) => {
+                                        const SAMMI_JSON = json.Data;
+                                        let { requestFunction, responseFunction } = this.getCommandHooksFunctions(family, event, SAMMI_JSON);
+                                        this.queues[familyObj[event].queue].push(responseFunction);
+        
+                                        requestFunction();
+                                };
+                                sammiclient.on(event_name, callback);
+                                this.subscribedEvents.push({ event_name, callback });
+                        }
                 }
         }
 
-        getCommandHooksFunctions(event, SAMMI_JSON) {
+        getCommandHooksFunctions(family, event, SAMMI_JSON) {
+                let functions;
+                const eventArgs = Object.keys(VEADO_SAMMI__extCommands[family][event].args);
+                const varArg = eventArgs ? SAMMI_JSON[eventArgs[0]] : null;
+                switch (family) {
+                        case 'State':
+                                functions = this.getStateFunctions(event, SAMMI_JSON, varArg);
+                                break;
+                        case 'PTT':
+                                functions = this.getPTTFunctions(event, SAMMI_JSON, varArg);
+                                break;
+                        case 'Number':
+                                functions = this.getNumberFunctions(event, SAMMI_JSON, varArg);
+                                break;
+                        default:
+                                functions = {
+                                        requestFunction: () => { this.logger.error(`No command hook request function for the "${family}" family.`) },
+                                        responseFunction: (webSocketResponse) => { this.logger.error(`No command hook response function for the "${family}" family. WebSocket response: ${webSocketResponse}`) },
+                                };
+                                break;
+                }
+                return functions;
+        }
+        
+        getStateFunctions(event, SAMMI_JSON, varArg) {
+                let requestFunction, responseFunction;
+
                 switch (event) {
                         case 'Peek':
-                                return () => { this.requestPeekState() };
-                        case 'Set':
-                                return () => { this.requestSetState(this.statesFromName[SAMMI_JSON.state]) };
-                        case 'Push':
-                                return () => { this.requestPushState(this.statesFromName[SAMMI_JSON.state])} ;
-                        case 'Pop':
-                                return () => { this.requestPopState(this.statesFromName[SAMMI_JSON.state]) };
-                        case 'Thumbnail':
-                                return () => { this.requestThumbState(this.statesFromName[SAMMI_JSON.state]) };
-                        case 'Set (by ID)':
-                                return () => { this.requestSetState(SAMMI_JSON.state) };
-                        case 'Push (by ID)':
-                                return () => { this.requestPushState(SAMMI_JSON.state) };
-                        case 'Pop (by ID)':
-                                return () => { this.requestPopState(SAMMI_JSON.state) };
-                        case 'Thumbnail (by ID)':
-                                return () => { this.requestThumbState(SAMMI_JSON.state) };
-                        case 'Random':
-                                return () => {
-                                        let states = Object.values(this.statesFromName);
-                                        this.requestSetState(states[Math.floor(Math.random() * states.length)]);
+                                requestFunction = () => { this.requestPeekState() };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.state.actual, SAMMI_JSON.FromButton);
                                 };
+                                break;
+                        case 'Set':
+                                requestFunction = () => { this.requestSetState(this.states[SAMMI_JSON.mainArg]?.id) };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.state.previous, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        case 'Push':
+                                requestFunction = () => { this.requestPushState(this.states[SAMMI_JSON.mainArg]?.id) };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.state.previous, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        case 'Pop':
+                                requestFunction = () => { this.requestPopState(this.states[SAMMI_JSON.mainArg]?.id) };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.state.previous, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        case 'Toggle':
+                                requestFunction = () => { this.requestToggleState(this.states[SAMMI_JSON.mainArg]?.id) };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.state.previous, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        case 'Thumbnail':
+                                requestFunction = () => { this.requestThumbState(this.states[SAMMI_JSON.mainArg]?.id) };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, webSocketResponse, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        case 'Random':
+                                requestFunction = () => {
+                                        let states = Object.values(this.states);
+                                        this.requestSetState(states[Math.floor(Math.random() * states.length)].id);
+                                };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.state.previous, SAMMI_JSON.FromButton);
+                                };
+                                break;
                         default:
-                                return () => { this.logger.error(`No command hook function for the "${event}" event.`) };
+                                requestFunction = () => { this.logger.error(`No command hook request function for the "${event}" event.`) };
+                                responseFunction = (webSocketResponse) => {
+                                        this.logger.error(`No command hook response function for the "${event}" event. WebSocket response: ${webSocketResponse}`);
+                                };
+                                break;
                 }
+                return { requestFunction, responseFunction };
         }
 
-        insertCommandsWithListedStates() {
-                let baseCommands = VEADO_SAMMI__extCommands_w_list;
-                for (const event in baseCommands) {
-                        SAMMI.extCommand(`${event}:${this.longID}`, 3355443, 52, {
-                                instance: ['Instance', 25, `${event}:${this.longID}`, 1, VEADOTUBE__getInstancesList(event)],
-                                state: [`${event} State`, 20, '', null, Object.keys(this.statesFromName)],
-                                ...baseCommands[event].args,
-                        }, false, true);
+        getPTTFunctions(event, SAMMI_JSON, varArg) {
+                let requestFunction, responseFunction;
+
+                switch (event) {
+                        case 'Get':
+                                requestFunction = () => { this.requestGetPTT() };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.ptt.actual, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        case 'Set':
+                                requestFunction = () => { this.requestSetPTT(SAMMI_JSON.mainArg) };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.ptt.previous, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        case 'Toggle':
+                                requestFunction = () => { this.requestTogglePTT() };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.ptt.previous, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        default:
+                                requestFunction = () => { this.logger.error(`No command hook request function for the "${event}" event.`) };
+                                responseFunction = (webSocketResponse) => {
+                                        this.logger.error(`No command hook response function for the "${event}" event. WebSocket response: ${webSocketResponse}`);
+                                };
+                                break;
                 }
+                return { requestFunction, responseFunction };
         }
-        
-        insertCommandsWithStringArgs() {
-                let baseCommands = VEADO_SAMMI__extCommands_w_str;
-                for (const event in baseCommands) {
-                        SAMMI.extCommand(`${event}:${this.longID}`, 3355443, 52, {
-                                instance: ['Instance', 25, `${event}:${this.longID}`, 1, VEADOTUBE__getInstancesList(event)],
-                                state: [`${event} State`, 14, ''],
-                                ...baseCommands[event].args,
-                        }, false, true);
+
+        getNumberFunctions(event, SAMMI_JSON, varArg) {
+                let requestFunction, responseFunction;
+
+                switch (event) {
+                        case 'Get':
+                                requestFunction = () => { this.requestGetNumber() };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.number.actual, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        case 'Set':
+                                requestFunction = () => {
+                                        this.requestSetNumber(parseFloat(SAMMI_JSON.mainArg), parseFloat(SAMMI_JSON.min) || null, parseFloat(SAMMI_JSON.max) || null)
+                                };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.number.previous, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        case 'Add':
+                                requestFunction = () => {
+                                        this.requestAddNumber(parseFloat(SAMMI_JSON.mainArg), parseFloat(SAMMI_JSON.min) || null, parseFloat(SAMMI_JSON.max) || null)
+                                };
+                                responseFunction = (webSocketResponse) => {
+                                        if (varArg) SAMMI.setVariable(varArg, this.number.previous, SAMMI_JSON.FromButton);
+                                };
+                                break;
+                        default:
+                                requestFunction = () => { this.logger.error(`No command hook request function for the "${event}" event.`) };
+                                responseFunction = (webSocketResponse) => {
+                                        this.logger.error(`No command hook response function for the "${event}" event. WebSocket response: ${webSocketResponse}`);
+                                };
+                                break;
                 }
-        }
-        
-        insertCommandsWithNoArgs() {
-                let baseCommands = VEADO_SAMMI__extCommands_n_args;
-                for (const event in baseCommands) {
-                        SAMMI.extCommand(`${event}:${this.longID}`, 3355443, 52, {
-                                instance: ['Instance', 25, `${event}:${this.longID}`, 1, VEADOTUBE__getInstancesList(event)],
-                                ...baseCommands[event].args,
-                        }, false, true);
-                }
+                return { requestFunction, responseFunction };
         }
 
         createWebSocket(callback = null) {
@@ -327,83 +630,26 @@ class VEADOTUBE__Instance {
                         this.webSocketStatus;
                         this.logger.info(`WebSocket successfully connected!`);
                         if (callback) callback(true);
+                        setTimeout(() => this.requestListenStates(), 1000);
+                        setTimeout(() => this.requestListenPTT(), 2000);
+                        setTimeout(() => this.requestListenNumber(), 3000);
                 };
 
                 this.webSocket.onerror = (event) => {
                         this.webSocketStatus;
-                        this.logger.error(`WebSocket error: ${event.message || "Unknown error"}`);
+                        this.logger.error(`WebSocket error: ${event.message || event || "Unknown error"}`);
                 };
-        }
-
-        createListener() {
-                if (this.listenerStatus === WebSocket.CLOSING) {
-                        this.logger.warn('Closure pending, waiting 5 seconds to reconnect.');
-                        setTimeout(() => this.createListener(), 5000);
-                        return;
-                }
-
-                this.listener = new WebSocket(this.serverUrl);
-
-                this.listener.onmessage = (event) => {
-                        this.listenerStatus;
-                        if (!event.data) {
-                                this.logger.debug('Received empty message from Listener');
-                                return;
-                        }
-                        const sanitizedMessage = event.data.trim().replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
-                        this.logger.debug(`Listener message: ${sanitizedMessage}`);
-                        let responseData = JSON.parse(sanitizedMessage.replace(VEADOTUBE__CHANNELS_PREFIXES.nodes, ''));
-                        let payload = responseData.payload;
-                        if (!payload) return;
-                        payload.state = {
-                                name: this.statesFromID[payload.state],
-                                id: payload.state,
-                        };
-                        SAMMI.triggerExt(this.listenerID, { veadotube: payload});
-                }
-
-                this.listener.onclose = (event) => {
-                        this.listenerStatus;
-                        this.logger.info(`Listener Disconnected(${event.code || "No code provided"}, ${event.reason || "No reason provided"})`);
-                };
-
-                this.listener.onopen = (event) => {
-                        this.listenerStatus;
-                        this.logger.debug(`Listener successfully connected!`);
-                        this.requestListenStates();
-                };
-
-                this.listener.onerror = (error) => {
-                        this.listenerStatus;
-                        this.logger.debug(`Listener error: ${error.message || "No error provided"}`);
-                };
-        }
-
-        get instanceBox() {
-                return document.querySelector(`.veado-instance-box[id="${this.shortID}"]`);
-        }
-
-        get webSocketStatus() {
-                let status = this.webSocket ? this.webSocket.readyState : 3;
-                if (this.instanceBox) this.instanceBox.querySelector('.veadotube-connection-status').innerText = VEADOTUBE__WebSocket_StringStates[status];
-                return status;
-        }
-
-        get listenerStatus() {
-                let status = this.listener?.readyState;
-                if (this.instanceBox) this.instanceBox.querySelector('.veado-listener-box').style.display = status !== WebSocket.OPEN ? 'none' : 'block';
-                this.instanceBox.querySelector('.toggle-listener-btn').innerText = this.listener ? 'Stop Listener' : 'Start Listener';
-                return status;
         }
 
         interpretChannel(message) {
-                let channel = message.split(':')[0];
-                let channels = Object.keys(VEADOTUBE__CHANNELS_PREFIXES);
-                let responseData;
+                let channels = Object.keys(VEADOTUBE__CHANNELS_PREFIXES), channel = message.split(':')[0];
+                let responseJSON = JSON.parse(message.replace(`${channel}:`, ''));
                 switch (channel) {
                         case channels[0]:
-                                responseData = JSON.parse(message.replace(`${channel}:`, ''));
-                                this.interpretNodesResponse(responseData);
+                                this.interpretNodesResponse(responseJSON);
+                                break;
+                        case channels[1]:
+                                this.interpretInstanceResponse(responseJSON);
                                 break;
                         default:
                                 this.logger.warn(`Unknown channel: ${channel}\nRaw response data: ${sanitizedMessage}`);
@@ -411,8 +657,26 @@ class VEADOTUBE__Instance {
                 }
         }
 
+        interpretInstanceResponse(responseData) {
+                if (!responseData) this.logger.error('VEADOTUBE__Instance.interpretInstanceResponse: responseData is null');
+                
+                switch (responseData.event) {
+                        case 'info':
+                                this.server = responseData.server;
+                                this.file = responseData.id;
+                                this.version = responseData.version;
+                                // this.fullName = responseData.name;
+                                this.language = responseData.language;
+                                // this.refreshAvatarStates();
+                                break;
+                        default:
+                                this.logger.warn(`Instance event not supported: ${responseData.event}. Raw response: ${responseData}`);
+                                break;
+                }
+        }
+
         interpretNodesResponse(responseData) {
-                if (!responseData) this.logger.error('VEADOTUBE__Instance.interpretResponse: responseData is null');
+                if (!responseData) this.logger.error('VEADOTUBE__Instance.interpretNodesResponse: responseData is null');
                 this.interpretID(responseData.id);
                 this.interpretEvent(responseData);
         }
@@ -446,12 +710,29 @@ class VEADOTUBE__Instance {
         }
 
         interpretListEntries(responseData) {
-                if (!responseData.entries) this.logger.error('VEADOTUBE__Instance.interpretListEntries: responseData.entries is null');
-                let stateEventsEntry = responseData.entries.find(entry => entry.type == "stateEvents");
-                if (!stateEventsEntry) return;
-                this.type = stateEventsEntry.id;
-                this.instanceBox.querySelector('.veadotube-instance-type').innerText = this.type;
-                this.refreshAvatarStates();
+                let entriesList = responseData.entries;
+                if (!entriesList) this.logger.error('VEADOTUBE__Instance.interpretListEntries: responseData.entries is null');
+                for (const entry of entriesList) {
+                        this.interpretListEntry(entry);
+                }
+                if (!this.version) this.requestListStates();
+        }
+
+        interpretListEntry(entry) {
+                if (!entry.name) this.logger.error('VEADOTUBE__Instance.interpretListEntry: entry.name is null');
+
+                switch (entry.name) {
+                        case "avatar state":
+                                if (!this.type) this.type = entry.id;
+                                this.version = this.version; // HACK: xd
+                                break;
+                        case "push-to-talk":
+                                this.listenerPTTID = this.shortID;
+                                break;
+                        default:
+                                this.logger.warn(`Unknown entry event name: ${entryName}\nRaw entry: ${entry}`);
+                                break;
+                }
         }
 
         interpretPayloadType(responseData) {
@@ -461,63 +742,98 @@ class VEADOTUBE__Instance {
                         case 'stateEvents':
                                 this.interpretPayloadStateEvents(responseData);
                                 break;
+                        case 'boolean':
+                                this.interpretPayloadBoolean(responseData);
+                                break;
+                        case 'number':
+                                this.interpretPayloadNumber(responseData);
+                                break;
                         default:
                                 this.logger.warn(`Unknown payload type: ${responseData.type}\nRaw response data: ${responseData}`);
                                 break;
                 }
         }
 
+        interpretPayloadBoolean(responseData) {
+                if (!responseData.payload) this.logger.error('VEADOTUBE__Instance.interpretPayloadBoolean: responseData.payload is null');
+                let responseValue = responseData.payload.value;
+
+                this.ptt.previous = this.ptt.actual;
+                this.ptt.actual = responseValue;
+
+                let veado_func = this.queues.PTTChange.shift();
+                while (!!veado_func) {
+                        veado_func(responseValue);
+                        veado_func = this.queues.PTTChange.shift();
+                }
+                SAMMI.triggerExt(this.listenerPTTID, { veadotubePTT: payload, instance: this.fullName });
+        }
+
+        interpretPayloadNumber(responseData) {
+                if (!responseData.payload) this.logger.error('VEADOTUBE__Instance.interpretPayloadNumber: responseData.payload is null');
+                let responseValue = responseData.payload.value;
+
+                this.number.previous = this.number.actual;
+                this.number.actual = responseValue;
+
+                let veado_func = this.queues.numberChange.shift();
+                while (!!veado_func) {
+                        veado_func(responseValue);
+                        veado_func = this.queues.numberChange.shift();
+                }
+                // TODO: Add listener trigger and ID for number in the future
+                // SAMMI.triggerExt(this.listenerNumberID, { veadotubeNumber: payload, instance: this.fullName });
+        }
+
         interpretPayloadStateEvents(responseData) {
                 if (!responseData.payload) this.logger.error('VEADOTUBE__Instance.interpretPayloadStateEvents: responseData.payload is null');
-                let payload = responseData.payload;
-                let veado_func = null;
-                let queue;
+                let payload = responseData.payload, veado_func;
+
                 switch (payload.event) {
                         case 'list':
                                 this.logger.info(`Found ${payload.states.length} Avatar States.`);
-                                this.statesFromName = {};
-                                this.statesFromID = {};
+                                this.states = {};
                                 payload.states.forEach(state => {
-                                        this.statesFromName[state.name] = state.id;
-                                        this.statesFromID[state.id] = state.name;
+                                        this.states[state.name] = state;
                                 });
 
-                                this.insertCommandsWithListedStates();
+                                VEADO_SAMMI__insertCommandsWithListedStates(this);
                                 break;
                         case 'peek':
-                        case 'set':
-                        case 'push':
-                        case 'pop':
-                                // HACK: Used peek queue because WebSocket response always contains peek
-                                veado_func = this.queues.peek.shift();
+                                this.state.previous = this.state.actual;
+                                this.state.actual = !!this.version ? this.states[payload.state] : Object.values(this.states).find(state => state.id === payload.state);
+                                // HACK: Used peek queue because WebSocket response always contains peek in 2.0a or older.
+                                veado_func = this.queues.stateChange.shift();
                                 while (!!veado_func) {
-                                        veado_func({
-                                                name: this.statesFromID[payload.state],
-                                                id: payload.state,
-                                        });
-                                        veado_func = this.queues.peek.shift();
+                                        veado_func(payload);
+                                        veado_func = this.queues.stateChange.shift();
                                 }
+                                SAMMI.triggerExt(this.listenerStateID, { veadotubeState: this.state.actual, instance: this.fullName });
                                 break;
                         case 'thumb':
-                                veado_func = this.queues[payload.event].shift();
+                                veado_func = this.queues.thumbnail.shift();
                                 while (!!veado_func) {
                                         veado_func({
-                                                name: this.statesFromID[payload.state],
+                                                name: !!this.version ? payload.state : Object.values(this.states).find(state => state.id === payload.state)?.name,
                                                 id: payload.state,
                                                 width: payload.width,
                                                 height: payload.height,
                                                 png: payload.png,
+                                                hash: payload.hash,
                                         });
                                         veado_func = this.queues[payload.event].shift();
                                 }
                                 break;
+                        case 'set':
+                        case 'push':
+                        case 'pop':
                         default:
                                 this.logger.warn(`Unknown payload.event: ${payload.event}\nRaw response payload: ${payload}`);
                                 break;
                 }
         }
 
-        sendNodesMessage(request) {
+        sendMessage(request, prefix) {
                 if (!this.webSocket) {
                         this.logger.warn('WebSocket is not connected');
                         return;
@@ -527,12 +843,12 @@ class VEADOTUBE__Instance {
 
                 switch (webSocketStatus) {
                         case WebSocket.OPEN:
-                                let message = VEADOTUBE__CHANNELS_PREFIXES.nodes + JSON.stringify(request);
+                                let message = prefix + JSON.stringify(request);
                                 this.webSocket.send(message);
                                 this.logger.debug(`Sent message: ${message}`);
                                 break;
                         case WebSocket.CLOSING:
-                                if (veadotube_auto_reconnect) setTimeout(() => this.createWebSocket, 5000);
+                                if (veadotube_auto_reconnect) setTimeout(() => this.createWebSocket(), 5000);
                                 break;
                         case WebSocket.CLOSED:
                                 if (veadotube_auto_reconnect) this.createWebSocket();
@@ -546,33 +862,12 @@ class VEADOTUBE__Instance {
                 }
         }
 
-        sendListenerMessage(request) {
-                if (!this.listener) {
-                        this.logger.warn('Listener is not connected');
-                        return;
-                }
-                let listenerStatus = this.listenerStatus;
-                if (listenerStatus !== WebSocket.OPEN) this.logger.warn(`Connection pending (${listenerStatus})`);
+        sendNodesMessage(request) {
+                this.sendMessage(request, VEADOTUBE__CHANNELS_PREFIXES.nodes);
+        }
 
-                switch (listenerStatus) {
-                        case WebSocket.OPEN:
-                                let message = VEADOTUBE__CHANNELS_PREFIXES.nodes + JSON.stringify(request);
-                                this.listener.send(message);
-                                this.logger.debug(`Listener sent message: ${message}`);
-                                break;
-                        case WebSocket.CLOSING:
-                                setTimeout(() => this.createListener, 5000);
-                                break;
-                        case WebSocket.CLOSED:
-                                this.createListener();
-                                break;
-                        case WebSocket.CONNECTING:
-                                setTimeout(() => { this.sendListenerMessage(request); }, 3000);
-                                break;
-                        default:
-                                this.logger.info("WTF?");
-                                break;
-                }
+        sendInstanceMessage(request) {
+                this.sendMessage(request, VEADOTUBE__CHANNELS_PREFIXES.instance);
         }
 
         async generateRequest(event, args = {}) {
@@ -581,6 +876,16 @@ class VEADOTUBE__Instance {
                         event: event,
                         ...args,
                 }
+        }
+
+        async requestInstanceInfo() {
+                let request = await this.generateRequest("info");
+                this.sendInstanceMessage(request);
+        }
+
+        async requestListEvents() {
+                let request = await this.generateRequest("list");
+                this.sendNodesMessage(request);
         }
         
         async generateStateEventsPayloadRequest(event) {
@@ -592,6 +897,11 @@ class VEADOTUBE__Instance {
                         },
                 });
                 return request;
+        }
+
+        async requestListStates() {
+                let request = await this.generateStateEventsPayloadRequest("list");
+                this.sendNodesMessage(request);
         }
 
         async requestPeekState() {
@@ -617,32 +927,126 @@ class VEADOTUBE__Instance {
                 this.sendNodesMessage(request);
         }
 
+        async requestToggleState(stateID) {
+                let request = await this.generateStateEventsPayloadRequest("toggle");
+                request.payload.state = stateID;
+                this.versionWarning("Toggle State");
+                this.sendNodesMessage(request);
+        }
+
         async requestThumbState(stateID) {
                 let request = await this.generateStateEventsPayloadRequest("thumb");
                 request.payload.state = stateID;
                 this.sendNodesMessage(request);
         }
 
-        async requestListStates() {
-                let request = await this.generateStateEventsPayloadRequest("list");
-                this.sendNodesMessage(request);
-        }
-
-        async requestListEvents() {
-                let request = await this.generateRequest("list");
-                this.sendNodesMessage(request);
-        }
-
         async requestListenStates() {
                 let request = await this.generateStateEventsPayloadRequest("listen");
-                request.payload.token = this.listenerID;
-                this.sendListenerMessage(request);
+                request.payload.token = this.listenerStateID;
+                this.sendNodesMessage(request);
         }
 
         async requestUnlistenStates() {
                 let request = await this.generateStateEventsPayloadRequest("unlisten");
-                request.payload.token = this.listenerID;
-                this.sendListenerMessage(request);
+                request.payload.token = this.listenerStateID;
+                this.sendNodesMessage(request);
+        }
+
+        async generateBooleanPayloadRequest(event) {
+                let request = await this.generateRequest("payload", {
+                        type: "boolean",
+                        id: this.type,
+                        payload: {
+                                event: event,
+                        },
+                });
+                return request;
+        }
+
+        async requestGetPTT() {
+                let request = await this.generateBooleanPayloadRequest("get");
+                this.versionWarning("Get Push-To-Talk");
+                this.sendNodesMessage(request);
+        }
+
+        async requestSetPTT(value) {
+                let request = await this.generateBooleanPayloadRequest("set");
+                request.payload.value = !!value;
+                this.versionWarning("Set Push-To-Talk");
+                this.sendNodesMessage(request);
+        }
+
+        async requestTogglePTT() {
+                let request = await this.generateBooleanPayloadRequest("toggle");
+                this.versionWarning("Toggle Push-To-Talk");
+                this.sendNodesMessage(request);
+        }
+
+        async requestListenPTT() {
+                let request = await this.generateBooleanPayloadRequest("listen");
+                request.payload.token = this.listenerPTTID;
+                this.sendNodesMessage(request);
+        }
+
+        async requestUnlistenPTT() {
+                let request = await this.generateBooleanPayloadRequest("unlisten");
+                request.payload.token = this.listenerPTTID;
+                this.sendNodesMessage(request);
+        }
+
+        async generateNumberPayloadRequest(event) {
+                let request = await this.generateRequest("payload", {
+                        type: "number",
+                        id: this.type,
+                        payload: {
+                                event: event,
+                        },
+                });
+                return request;
+        }
+
+        async requestGetNumber() {
+                let request = await this.generateNumberPayloadRequest("get");
+                this.typeWarning("Get Number");
+                this.sendNodesMessage(request);
+        }
+
+        async requestSetNumber(value, min = null, max = null) {
+                let request = await this.generateNumberPayloadRequest("set");
+                request.payload.value = {
+                        value: value
+                };
+                if (min && max) {
+                        request.payload.value.min = min;
+                        request.payload.value.max = max;
+                }
+                this.typeWarning("Set Number");
+                this.sendNodesMessage(request);
+        }
+
+        async requestAddNumber(value, min = null, max = null) {
+                let request = await this.generateNumberPayloadRequest("add");
+                request.payload.value = {
+                        value: value
+                };
+                if (min && max) {
+                        request.payload.value.min = min;
+                        request.payload.value.max = max;
+                }
+                this.typeWarning("Add Number");
+                this.sendNodesMessage(request);
+        }
+
+        async requestListenNumber() {
+                let request = await this.generateNumberPayloadRequest("listen");
+                request.payload.token = this.longID;
+                this.sendNodesMessage(request);
+        }
+
+        async requestUnlistenNumber() {
+                let request = await this.generateNumberPayloadRequest("unlisten");
+                request.payload.token = this.longID;
+                this.sendNodesMessage(request);
         }
 
         refreshAvatarStates() {
@@ -651,32 +1055,30 @@ class VEADOTUBE__Instance {
         }
 
         connectWebSocket() {
-                !this.webSocket ? this.createWebSocket(() => { this.refreshAvatarStates() }) : this.createWebSocket();
+                !!this.version ? this.createWebSocket() : this.createWebSocket(() => {
+                        this.requestListStates();
+                });
         }
 
-        connectListener() {
-                this.createListener();
-        }
-
-        async disconnectWebSocket(webSocketName) {
-                if (!this[webSocketName]) return;
+        async disconnectWebSocket() {
+                if (!this.webSocket) return;
                 if (
-                        this[webSocketName].readyState !== WebSocket.CLOSING &&
-                        this[webSocketName].readyState !== WebSocket.CLOSED
+                        this.webSocket.readyState !== WebSocket.CLOSING &&
+                        this.webSocket.readyState !== WebSocket.CLOSED
                 ) {
-                        if (this[webSocketName].bufferedAmount > 0) {
+                        if (this.webSocket.bufferedAmount > 0) {
                                 await new Promise(resolve => setTimeout(resolve, 5000));
-                                return this.disconnectWebSocket(webSocketName);
+                                return this.disconnectWebSocket();
                         }
                         
                         return new Promise((resolve) => {
-                                this[webSocketName].addEventListener('close', () => resolve(), { once: true });
-                                this[webSocketName].close(1000);
+                                this.webSocket.addEventListener('close', () => resolve(), { once: true });
+                                this.webSocket.close(1000);
                         }).finally(() => {
-                                this[webSocketName] = null;
+                                this.webSocket = null;
                         });
                 }
-                this[webSocketName] = null;
+                this.webSocket = null;
         }
 
         async destroy() {
@@ -688,8 +1090,12 @@ class VEADOTUBE__Instance {
                                 });
                                 this.subscribedEvents = null;
                         }
-                        if (this.webSocket) await this.disconnectWebSocket('webSocket');
-                        if (this.listener) await this.disconnectWebSocket('listener');
+                        if (this.webSocket) {
+                                this.requestUnlistenStates();
+                                this.requestUnlistenPTT();
+                                this.requestUnlistenNumber();
+                        }
+                        await this.disconnectWebSocket();
                 } catch (error) {
                         this.logger.error(`WebSocket error while disconnecting: ${error.message}`);
                 } finally {
@@ -699,9 +1105,8 @@ class VEADOTUBE__Instance {
         }
 }
 
-function VEADOTUBE__getInstancesList(event) {
-        let instances = [...veadotube_instances, ...veadotube_manual_instances];
-        return instances.map(instance => `${event}:${instance.longID}`);
+function VEADOTUBE__getInstancesList(family, event) {
+        return [...veadotube_instances, ...veadotube_manual_instances].map(instance => `${event}:${family}:${instance.longID}`);
 }
 
 function VEADOTUBE__updateInstancesList() {
@@ -715,7 +1120,6 @@ function VEADOTUBE__updateInstancesList() {
                 }
 
                 veadotube_instances = [];
-                // document.querySelector('.veado-instances-list').innerHTML = '';
                 let instances = response.value;
                 let index = 0;
                 for (const instance of instances) {
@@ -735,47 +1139,87 @@ function VEADOTUBE__updateInstancesList() {
         });
 }
 
-function VEADO_SAMMI__insertCommandsWithListedStates() {
+function VEADO_SAMMI__insertCommandsWithListedStates(instance = null) {
         let baseCommands = VEADO_SAMMI__extCommands_w_list;
-        for (const event in baseCommands) {
-                SAMMI.extCommand(`${VEADO_SAMMI__PLUGIN_NAME} - ${baseCommands[event].baseCmdStr}`, 3355443, 52, {
-                        instance: ['Instance', 25, `Connect to a WebSocket to start`, 1, VEADOTUBE__getInstancesList(event)],
-                        state: [`${event} State`, 20, '', null, ['No states detected! Is the WebSocket connected?']],
-                        ...baseCommands[event].args,
-                });
+        for (const family in baseCommands) {
+                const familyObj = baseCommands[family];
+                for (const event in familyObj) {
+                        const eventObj = familyObj[event];
+                        const instanceCmdName = instance ? `${event}:${family}:${instance.longID}` : null;
+                        const emptyList = ['No options available! Is the WebSocket connected?'];
+                        let defaultList = emptyList;
+                        if (instance) {
+                                const newList = Object.keys(instance.states);
+                                defaultList = newList.length > 0 ? newList : emptyList;
+                        }
+                        SAMMI.extCommand(instanceCmdName || `${VEADO_SAMMI__PLUGIN_NAME} - ${eventObj.baseCmdStr}`, 3355443, 52, {
+                                instance: ['Instance', 25, instanceCmdName || 'Connect to a WebSocket to start', 1, VEADOTUBE__getInstancesList(family, event)],
+                                mainArg: [eventObj.baseCmdStr, 20, '', null, defaultList],
+                                ...eventObj.args,
+                        }, false, !!instance);
+                }
         }
-        let instances = [...veadotube_instances, ...veadotube_manual_instances];
-        instances.forEach(instance => { instance.insertCommandsWithListedStates() });
+        if (instance) return;
+        [...veadotube_instances, ...veadotube_manual_instances].forEach(instance => { VEADO_SAMMI__insertCommandsWithListedStates(instance) });
 }
 
-function VEADO_SAMMI__insertCommandsWithStringArgs() {
+function VEADO_SAMMI__insertCommandsWithStringArgs(instance = null) {
         let baseCommands = VEADO_SAMMI__extCommands_w_str;
-        for (const event in baseCommands) {
-                SAMMI.extCommand(`${VEADO_SAMMI__PLUGIN_NAME} - ${baseCommands[event].baseCmdStr}`, 3355443, 52, {
-                        instance: ['Instance', 25, `Connect to a WebSocket to start`, 1, VEADOTUBE__getInstancesList(event)],
-                        state: [`${event} State`, 14, ''],
-                        ...baseCommands[event].args,
-                });
+        for (const family in baseCommands) {
+                const familyObj = baseCommands[family];
+                for (const event in familyObj) {
+                        const eventObj = familyObj[event];
+                        const instanceCmdName = instance ? `${event}:${family}:${instance.longID}` : null;
+                        SAMMI.extCommand(instanceCmdName || `${VEADO_SAMMI__PLUGIN_NAME} - ${eventObj.baseCmdStr}`, 3355443, 52, {
+                                instance: ['Instance', 25, instanceCmdName || 'Connect to a WebSocket to start', 1, VEADOTUBE__getInstancesList(family, event)],
+                                mainArg: [eventObj.baseCmdStr, 14, ''],
+                                ...eventObj.args,
+                        }, false, !!instance);
+                }
         }
-        let instances = [...veadotube_instances, ...veadotube_manual_instances];
-        instances.forEach(instance => { instance.insertCommandsWithStringArgs() });
+        if (instance) return;
+        [...veadotube_instances, ...veadotube_manual_instances].forEach(instance => { VEADO_SAMMI__insertCommandsWithStringArgs(instance) });
 }
 
-function VEADO_SAMMI__insertCommandsWithNoArgs() {
-        let baseCommands = VEADO_SAMMI__extCommands_n_args;
-        for (const event in baseCommands) {
-                SAMMI.extCommand(`${VEADO_SAMMI__PLUGIN_NAME} - ${baseCommands[event].baseCmdStr}`, 3355443, 52, {
-                        instance: ['Instance', 25, `Connect to a WebSocket to start`, 1, VEADOTUBE__getInstancesList(event)],
-                        ...baseCommands[event].args,
-                });
+function VEADO_SAMMI__insertCommandsWithBooleanArgs(instance = null) {
+        let baseCommands = VEADO_SAMMI__extCommands_w_bool;
+        for (const family in baseCommands) {
+                const familyObj = baseCommands[family];
+                for (const event in familyObj) {
+                        const eventObj = familyObj[event];
+                        const instanceCmdName = instance ? `${event}:${family}:${instance.longID}` : null;
+                        SAMMI.extCommand(instanceCmdName || `${VEADO_SAMMI__PLUGIN_NAME} - ${eventObj.baseCmdStr}`, 3355443, 52, {
+                                instance: ['Instance', 25, instanceCmdName || 'Connect to a WebSocket to start', 1, VEADOTUBE__getInstancesList(family, event)],
+                                mainArg: [eventObj.baseCmdStr, 18, 0, null, ['False', 'True']],
+                                ...eventObj.args,
+                        }, false, !!instance);
+                }
         }
-        let instances = [...veadotube_instances, ...veadotube_manual_instances];
-        instances.forEach(instance => { instance.insertCommandsWithNoArgs() });
+        if (instance) return;
+        [...veadotube_instances, ...veadotube_manual_instances].forEach(instance => { VEADO_SAMMI__insertCommandsWithBooleanArgs(instance) });
+}
+
+function VEADO_SAMMI__insertCommandsWithNoArgs(instance = null) {
+        let baseCommands = VEADO_SAMMI__extCommands_n_args;
+        for (const family in baseCommands) {
+                const familyObj = baseCommands[family];
+                for (const event in familyObj) {
+                        const eventObj = familyObj[event];
+                        const instanceCmdName = instance ? `${event}:${family}:${instance.longID}` : null;
+                        SAMMI.extCommand(instanceCmdName || `${VEADO_SAMMI__PLUGIN_NAME} - ${eventObj.baseCmdStr}`, 3355443, 52, {
+                                instance: ['Instance', 25, instanceCmdName || 'Connect to a WebSocket to start', 1, VEADOTUBE__getInstancesList(family, event)],
+                                ...eventObj.args,
+                        }, false, !!instance);
+                }
+        }
+        if (instance) return;
+        [...veadotube_instances, ...veadotube_manual_instances].forEach(instance => { VEADO_SAMMI__insertCommandsWithNoArgs(instance) });
 }
 
 function VEADO_SAMMI__updateBaseCommands() {
         VEADO_SAMMI__insertCommandsWithNoArgs();
         VEADO_SAMMI__insertCommandsWithListedStates();
+        VEADO_SAMMI__insertCommandsWithBooleanArgs();
         VEADO_SAMMI__insertCommandsWithStringArgs();
 }
 
@@ -809,7 +1253,6 @@ function veado__addManualInstance() {
                 name: inputName,
         });
         veadotube_manual_instances.push(instance_obj);
-        // if (veadotube_auto_reconnect) instance_obj.connectWebSocket();
         VEADO_SAMMI__LOGGER.log(`Manually added instance: ${instance_obj.name} (${instance_obj.serverUrl})`);
         document.getElementById("veadotube-websocket-server").value = '';
         document.getElementById("veadotube-window-title").value = '';
