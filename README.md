@@ -3,7 +3,7 @@
 
 # VeadoSAMMI (A Veadotube extension for SAMMI)
 > [!TIP]
-> ## New update [available](https://github.com/Benjas333/VeadoSAMMI/releases/tag/v3.0.0)! veadotube mini 2.1 features are here!
+> ### New update [available](https://github.com/Benjas333/VeadoSAMMI/releases/tag/v3.0.0)! veadotube mini 2.1 features are here!
 
 This is a SAMMI extension that allows you to control Veadotube mini using its WebSocket. It should be also compatible with Veadotube live and Veadotube editor, but I don't have access to them, so I haven't tested them yet.
 <!-- ![](/assets/logo%20not%20alpha%20in%20head.png) -->
