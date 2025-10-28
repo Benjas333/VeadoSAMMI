@@ -629,10 +629,10 @@ class VEADOTUBE__Instance {
                 this.webSocket.onopen = (event) => {
                         this.webSocketStatus;
                         this.logger.info(`WebSocket successfully connected!`);
-                        if (callback) callback(true);
-                        setTimeout(() => this.requestListenStates(), 1000);
-                        setTimeout(() => this.requestListenPTT(), 2000);
-                        setTimeout(() => this.requestListenNumber(), 3000);
+                        if (callback) callback();
+                        setTimeout(() => this.requestListenStates(), 500);
+                        setTimeout(() => this.requestListenPTT(), 1000);
+                        setTimeout(() => this.requestListenNumber(), 1500);
                 };
 
                 this.webSocket.onerror = (event) => {
@@ -777,14 +777,14 @@ class VEADOTUBE__Instance {
                         this.logger.error('VEADOTUBE__Instance.interpretPayloadBoolean: responseData.payload is null');
                         return;
                 }
-                let responseValue = responseData.payload.value;
+                let responseValue = responseData.payload;
 
                 this.ptt.previous = this.ptt.actual;
                 this.ptt.actual = responseValue;
 
                 let veado_func = this.queues.PTTChange.shift();
                 while (!!veado_func) {
-                        veado_func(responseValue);
+                        veado_func(this.ptt.previous);
                         veado_func = this.queues.PTTChange.shift();
                 }
                 SAMMI.triggerExt(this.listenerPTTID, { veadotubePTT: this.ptt.actual, instance: this.fullName });
@@ -799,7 +799,7 @@ class VEADOTUBE__Instance {
 
                 let veado_func = this.queues.numberChange.shift();
                 while (!!veado_func) {
-                        veado_func(responseValue);
+                        veado_func(this.ptt.previous);
                         veado_func = this.queues.numberChange.shift();
                 }
                 // TODO: Add listener trigger and ID for number in the future
@@ -1076,9 +1076,7 @@ class VEADOTUBE__Instance {
         }
 
         connectWebSocket() {
-                !!this.version ? this.createWebSocket() : this.createWebSocket(() => {
-                        this.requestListStates();
-                });
+                !!this.version ? this.createWebSocket() : this.createWebSocket(this.requestListStates);
         }
 
         async disconnectWebSocket() {
