@@ -8,10 +8,10 @@ const VEADOTUBE__CHANNELS_PREFIXES = {
 };
 
 const VEADOTUBE__WebSocket_StringStates = {
-        0: "Connecting...",
-        1: "Connected",
-        2: "Disconnecting...",
-        3: "Disconnected"
+        0: "🟡Connecting...",
+        1: "🟢Connected",
+        2: "🟡Disconnecting...",
+        3: "🔴Disconnected"
 };
 
 let veadotube_auto_reconnect = false;
@@ -39,12 +39,12 @@ const VEADO_SAMMI__extCommands_n_args = {
         },
         PTT: {
                 'Get': {
-                        baseCmdStr: "(Beta) Get Actual Push-To-Talk State",
+                        baseCmdStr: "Get Actual Push-To-Talk State",
                         args: VEADO_SAMMI__saveAsVariableBox,
                         queue: "PTTChange",
                 },
                 'Toggle': {
-                        baseCmdStr: "(Beta) Toggle Push-To-Talk State",
+                        baseCmdStr: "Toggle Push-To-Talk State",
                         args: VEADO_SAMMI__saveOldStateAsVariableBox,
                         queue: "PTTChange",
                 },
@@ -119,7 +119,7 @@ const VEADO_SAMMI__extCommands_w_bool = {
         State: {},
         PTT: {
                 'Set': {
-                        baseCmdStr: "(Beta) Set Push-To-Talk State",
+                        baseCmdStr: "Set Push-To-Talk State",
                         args: VEADO_SAMMI__saveOldStateAsVariableBox,
                         queue: "PTTChange",
                 },
@@ -658,7 +658,10 @@ class VEADOTUBE__Instance {
         }
 
         interpretInstanceResponse(responseData) {
-                if (!responseData) this.logger.error('VEADOTUBE__Instance.interpretInstanceResponse: responseData is null');
+                if (!responseData) {
+                        this.logger.error('VEADOTUBE__Instance.interpretInstanceResponse: responseData is null');
+                        return;
+                }
                 
                 switch (responseData.event) {
                         case 'info':
@@ -676,7 +679,10 @@ class VEADOTUBE__Instance {
         }
 
         interpretNodesResponse(responseData) {
-                if (!responseData) this.logger.error('VEADOTUBE__Instance.interpretNodesResponse: responseData is null');
+                if (!responseData) {
+                        this.logger.error('VEADOTUBE__Instance.interpretNodesResponse: responseData is null');
+                        return;
+                }
                 this.interpretID(responseData.id);
                 this.interpretEvent(responseData);
         }
@@ -688,13 +694,16 @@ class VEADOTUBE__Instance {
                         case 'mini':
                                 break;
                         default:
-                                this.logger.warn(`This instance type is not fully supported: ${id}. The code will continue anyways.`);
+                                this.logger.warn(`This instance type is not fully tested: ${id}. The code will continue anyways.`);
                                 break;
                 }
         }
 
         interpretEvent(responseData) {
-                if (!responseData.event) this.logger.error('VEADOTUBE__Instance.interpretEvent: responseData.event is null');
+                if (!responseData.event) {
+                        this.logger.error('VEADOTUBE__Instance.interpretEvent: responseData.event is null');
+                        return;
+                }
 
                 switch (responseData.event) {
                         case 'payload':
@@ -711,7 +720,10 @@ class VEADOTUBE__Instance {
 
         interpretListEntries(responseData) {
                 let entriesList = responseData.entries;
-                if (!entriesList) this.logger.error('VEADOTUBE__Instance.interpretListEntries: responseData.entries is null');
+                if (!entriesList) {
+                        this.logger.error('VEADOTUBE__Instance.interpretListEntries: responseData.entries is null');
+                        return;
+                }
                 for (const entry of entriesList) {
                         this.interpretListEntry(entry);
                 }
@@ -719,7 +731,10 @@ class VEADOTUBE__Instance {
         }
 
         interpretListEntry(entry) {
-                if (!entry.name) this.logger.error('VEADOTUBE__Instance.interpretListEntry: entry.name is null');
+                if (!entry.name) {
+                        this.logger.error('VEADOTUBE__Instance.interpretListEntry: entry.name is null');
+                        return;
+                }
 
                 switch (entry.name) {
                         case "avatar state":
@@ -736,7 +751,10 @@ class VEADOTUBE__Instance {
         }
 
         interpretPayloadType(responseData) {
-                if (!responseData.type) this.logger.error('VEADOTUBE__Instance.interpretPayloadType: responseData.type is null');
+                if (!responseData.type) {
+                        this.logger.error('VEADOTUBE__Instance.interpretPayloadType: responseData.type is null');
+                        return;
+                }
 
                 switch (responseData.type) {
                         case 'stateEvents':
@@ -755,7 +773,10 @@ class VEADOTUBE__Instance {
         }
 
         interpretPayloadBoolean(responseData) {
-                if (!responseData.payload) this.logger.error('VEADOTUBE__Instance.interpretPayloadBoolean: responseData.payload is null');
+                if (typeof responseData.payload == 'undefined' || responseData.payload === null) {
+                        this.logger.error('VEADOTUBE__Instance.interpretPayloadBoolean: responseData.payload is null');
+                        return;
+                }
                 let responseValue = responseData.payload.value;
 
                 this.ptt.previous = this.ptt.actual;
@@ -766,7 +787,7 @@ class VEADOTUBE__Instance {
                         veado_func(responseValue);
                         veado_func = this.queues.PTTChange.shift();
                 }
-                SAMMI.triggerExt(this.listenerPTTID, { veadotubePTT: payload, instance: this.fullName });
+                SAMMI.triggerExt(this.listenerPTTID, { veadotubePTT: this.ptt.actual, instance: this.fullName });
         }
 
         interpretPayloadNumber(responseData) {
@@ -782,7 +803,7 @@ class VEADOTUBE__Instance {
                         veado_func = this.queues.numberChange.shift();
                 }
                 // TODO: Add listener trigger and ID for number in the future
-                // SAMMI.triggerExt(this.listenerNumberID, { veadotubeNumber: payload, instance: this.fullName });
+                // SAMMI.triggerExt(this.listenerNumberID, { veadotubeNumber: this.number.actual, instance: this.fullName });
         }
 
         interpretPayloadStateEvents(responseData) {
@@ -791,7 +812,7 @@ class VEADOTUBE__Instance {
 
                 switch (payload.event) {
                         case 'list':
-                                this.logger.info(`Found ${payload.states.length} Avatar States.`);
+                                this.logger.warn(`Found ${payload.states.length} Avatar States.`);
                                 this.states = {};
                                 payload.states.forEach(state => {
                                         this.states[state.name] = state;
@@ -1100,7 +1121,7 @@ class VEADOTUBE__Instance {
                         this.logger.error(`WebSocket error while disconnecting: ${error.message}`);
                 } finally {
                         this.instanceBox.remove();
-                        this.logger.info(`Destroyed ${this.shortID} and unsubscribed events.`);
+                        this.logger.warn(`Destroyed ${this.shortID} and unsubscribed events.`);
                 }
         }
 }
@@ -1123,6 +1144,9 @@ function VEADOTUBE__updateInstancesList() {
                 let instances = response.value;
                 let index = 0;
                 for (const instance of instances) {
+                        // if (instance.server.includes(':')) {
+                        //         instance.port = instance.server.split(':')[1];
+                        // }
                         let instance_obj = new VEADOTUBE__Instance({
                                 index: index++,
                                ...instance
@@ -1246,6 +1270,7 @@ function veado__addManualInstance() {
         const inputServer = document.getElementById("veadotube-websocket-server").value?.trim();
         const inputName = document.getElementById("veadotube-window-title").value?.trim();
         if (!inputServer || !inputName) return;
+        // let index = inputServer.includes(':') ? inputServer.split(':')[1] : generateShortHash(`${inputServer}${inputName}`);
         let index = generateShortHash(`${inputServer}${inputName}`);
         let instance_obj = new VEADOTUBE__Instance({
                 index: index,

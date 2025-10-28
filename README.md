@@ -23,10 +23,10 @@ Thanks to HueVirtualCreature, because my first code was based on [theirs](https:
   - [VeadoSAMMI - (NEW) Toggle Avatar State](#veadosammi---new-toggle-avatar-state)
   - [VeadoSAMMI - Get Avatar State Thumbnail](#veadotube-mini---thumb-avatar-state)
   - [VeadoSAMMI - Set Random Avatar State](#veadotube-mini---set-random-avatar-state)
-- [Beta Commands](#beta-commands)
   - [VeadoSAMMI - (NEW) Get Push-To-Talk](#veadosammi---new-get-push-to-talk)
   - [VeadoSAMMI - (NEW) Set Push-To-Talk](#veadosammi---new-set-push-to-talk)
   - [VeadoSAMMI - (NEW) Toggle Push-To-Talk](#veadosammi---new-toggle-push-to-talk)
+- [Beta Commands](#beta-commands)
   - [VeadoSAMMI - (NEW) Get Number](#veadosammi---new-get-number)
   - [VeadoSAMMI - (NEW) Set Number](#veadosammi---new-set-number)
   - [VeadoSAMMI - (NEW) Add Number](#veadosammi---new-add-number)
@@ -166,7 +166,6 @@ Response format: {
         thumbHash: string
 }
 
-## Beta commands
 > [!IMPORTANT]
 > In order to test the Push-To-Talk commands you must enable: microphone settings > push-to-talk > use websocket.
 > If you have assigned a shortcut it will override the Push-to-talk WebSocket behavior (so remove it if you are going to test VeadoSAMMI commands related with Push-to-talk).
@@ -210,8 +209,9 @@ Response format: {
         value: boolean
 }
 
+## Beta commands
 > [!NOTE]
-> I actually don't know what these endpoints are for (because they're not used in veadotube mini), but I added them in case they are used in Veadotube live or Veadotube editor. They are in Beta because I was unable to test them, so there's a high chance they even don't work.
+> I actually don't know what these endpoints are for (because they're not used in veadotube mini), but I added them in case they are used in Veadotube live or Veadotube editor. They are in Beta because I was unable to test them, so there's a high chance they don't even work.
 - ### VeadoSAMMI - (NEW) Get Number
 Get the actual Number value.
 
@@ -278,8 +278,12 @@ or
 - [x] Find an implement a useful utility for listen and unlisten endpoints.
 - [x] Add support for >= veadotube mini 2.1a.
 - [ ] Maybe implement an auto updater or an updates detector.
+- [ ] Maybe find a way to use TypeScript.
+- [ ] Improve the instances listing in general.
 - [ ] Add Number listener id for extTriggers.
 - [ ] Release the beta commands lol.
+
+- [ ] I'm actually thinking of rewriting the whole thing xd.
 
 ## Contributing
 Any contribution would be appreciated.
